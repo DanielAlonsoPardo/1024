@@ -9,16 +9,16 @@ export const LoginBar = () => {
   function logout() { return Meteor.logout(); }
 
   return (
-    <div>
+    <div class="login-bar">
       { user
-        ? ( <Fragment>
+        ? ( <>
               <div>LOGGED IN AS: "{user.username}"</div>
               <button onClick={ () => logout() }>Logout</button>
-            </Fragment> )
-        : ( <Fragment>
+            </> )
+        : ( <>
               <div>LOGGED OUT</div>
               <LoginForm/> 
-            </Fragment> ) }
+            </> ) }
     </div>
   );
 };
