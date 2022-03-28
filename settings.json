@@ -1,0 +1,9 @@
+{
+  "packages": {
+    "email": {
+      "service": "gmail",
+      "user": "@gmail.com",
+      "password": ""
+    }
+  }
+}
