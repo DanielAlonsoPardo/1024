@@ -1,5 +1,6 @@
   *Example notes*
 ===================
+- consider using sass
 
 # Title/objective (general category)
 ## More specific objective
@@ -10,7 +11,9 @@
     - solution found
       - just notes in general
       - use citations [like this][example1]
-## *task yet to be completed*
+
+## _task yet to be completed_
+
 ## task completed out-of-order
 
 [example1]: https://www.example.com "Title"

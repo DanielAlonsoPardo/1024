@@ -10,7 +10,7 @@ Meteor.startup(() => {
     Accounts.createUser({ username: SEED_USERNAME, password: SEED_PASSWORD });
 
   if (!process.env.MAIL_URL) {
-    throw "environment variable for mailing not set!"
+    console.warn("environment variable for mailing not set!");
   }
 });
 
