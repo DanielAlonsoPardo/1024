@@ -11,7 +11,7 @@ export const UnitTests = () => {
     });
 
     describe("Engine tests", function () {
-      it("new board is the right size", function() {
+      it("new board is correctly constructed", function() {
         const boardsize = 4;
         let engine = new Ten24.Engine(4, 0);
 
@@ -27,7 +27,7 @@ export const UnitTests = () => {
         assert.strictEqual(cellcount, boardsize**2, "Board is not the expected size");
       });
 
-      describe("slide_numbers", function() {
+      describe("slide_numbers_raw", function() {
         const boardsize = 4;
         let engine;
         beforeEach(function() {
@@ -95,6 +95,23 @@ export const UnitTests = () => {
           assert.deepEqual(engine.board[1], [0, 1, 2, 1], "numbers did not slide down (row 1)");
           assert.deepEqual(engine.board[2], [0, 0, 0, 0], "numbers did not slide down (row 2)");
           assert.deepEqual(engine.board[3], [0, 0, 0, 0], "numbers did not slide down (row 3)");
+        });
+      });
+      describe("place_randomly", function() {
+        it("places a number whenever it can", function() {
+          let boardsize = 4;
+          let engine = new Ten24.Engine(boardsize, 0);
+          let i;
+          for (i = 0; i < boardsize**2; i++) {
+            let before = engine.count_empty_cells();
+            let ret = engine.place_randomly(2);
+            let after = engine.count_empty_cells();
+            assert.equal(after, before - 1, "did not correctly add number to board (loop "+i+")");
+            assert.isTrue(ret, "unexpected return (loop "+i+")")
+          }
+
+          let ret = engine.place_randomly(1);
+          assert.isFalse(ret, "expected place_randomly to return false (aka 'didnt place number')(loop "+i+")")
         });
       });
     });

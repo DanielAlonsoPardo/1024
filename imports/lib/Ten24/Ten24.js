@@ -1,3 +1,5 @@
+import MersenneTwister from 'mersenne-twister'
+
 /** Ten24
  *
  *  Yet Another clone of 1024, the famous game where you combine numbers into bigger numbers.
@@ -27,6 +29,8 @@ export class Engine {
 
     for (let i = 0; i < boardsize; i++)
       this.board[i] = Array(boardsize).fill(0);
+
+    this.rng = new MersenneTwister(seed);
   }
 
 
@@ -118,8 +122,52 @@ export class Engine {
     }
   }
 
+  /**
+   *  place a given number on the board, in a random empty cell.
+   *
+   *  returns: true if it was successfully placed, false otherwise.
+   */
+  place_randomly(number) {
+    let empty_cell_count = this.count_empty_cells();
+    if (number <= 0)
+      return true;
+    if (empty_cell_count <= 0)
+      return false;
+
+    let target_cell = Math.floor(empty_cell_count * this.rng.random());
+
+    let current_empty_cell = 0;
+    for (let row = 0; row < this.board.length || current_empty_cell <= target_cell; row++) {
+      for (let col = 0; col < this.board.length; col++) {
+        if (this.board[row][col] == 0) {
+          if (current_empty_cell == target_cell) {
+            this.board[row][col] = number;
+            current_empty_cell++;
+            break;
+          } else {
+            current_empty_cell++;
+          }
+        }
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   *  count the number of empty cells on the board.
+   *  returns: the count
+   */
+  count_empty_cells() {
+    let count = 0;
+    for (let row of this.board)
+      for (let cell of row)
+        if (cell == 0) count ++;
+    return count;
+  }
+
   log_board = () => {
-    for (const l of engine.board)
+    for (const l of this.board)
       console.log(l)
     console.log()
   }
