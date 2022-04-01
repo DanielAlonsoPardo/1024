@@ -16,7 +16,6 @@
 console.log("loading 1024...");
 
 export class Engine {
-
   /* Creates an empty board, ready to play */
   constructor(boardsize, seed) {
     if (boardsize < 1 || boardsize > 16)
@@ -28,6 +27,37 @@ export class Engine {
     for (let i = 0; i < boardsize; i++)
       this.board[i] = Array(boardsize).fill(0);
   }
+
+  slide_numbers() {
+    //slide to the right
+
+    let lower_bound = this.board.length - 1;
+    let upper_bound = 0;
+
+    for (let row = 0; row < this.board.length; row++) {
+      let from = lower_bound - 1;
+      let to = lower_bound;
+
+
+      while(from >= 0) {
+        if (this.board[to][row] == 0) {
+          if (this.board[from][row] != 0) {
+            this.board[to][row] = this.board[from][to];
+            this.board[from][row] = 0;
+          }
+        } else {
+          if (this.board[from][row] == this.board[to][row]) {
+            this.board[from][row] = 0;
+            this.board[to][row] *= 2;
+            to--;
+          }
+        }
+        from--;
+      }
+
+
+    }
+  };
 }
 
 export const Ten24 = () => {
