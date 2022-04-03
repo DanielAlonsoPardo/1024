@@ -2,7 +2,7 @@ import MersenneTwister from 'mersenne-twister'
 
 /**
  * Attributes:
- *   board -> current gamestate
+ *   board -> current gamestate. Is always a _square_ of size `boardsize`
  *   seed -> seed used when initializing the game
  *   move_count -> adds one on every call to slide_numbers_raw()
  *   zero_count -> number of empty cells, updated on slide and random placement.
@@ -35,24 +35,55 @@ export class Engine {
       this.max_number = number;
   }
 
-/**
- * Slide or combine numbers on the board as far as possible in some direction.
- *   - Zeros are empty cells, and any number can slide into it
- *   - Two equal numbers that slide into each other combine into one by addition
- *   - You can't chain combinations
- * 
- *   slideAwayFromStart -> are numbers sliding either right or down?
- *   slideVertically -> are numbers sliding either up or down?
- * 
- * 
- *
- * The 'start' that 'slideAwayFromStart' is referring to is top left (board[0][0])
- * You can control which of the four sides of a board to slide towards like so:
- *   Right: slide_numbers_raw(true, false)
- *   Left: slide_numbers_raw(false, false)
- *   Up: slide_numbers_raw(false, true)
- *   Down: slide_numbers_raw(true, true)
- */
+  /** moves_available
+   * Returns true if there are any moves left on the board that are possible.
+   *         false otherwise.
+   */
+  moves_available(number) {
+    if (this.zero_count > 0)
+      return true;
+
+    //true if given cell has a combinable number to the right, or below
+    //assumes no empty cells on the board
+    let number_is_combinable_lr = (row, col) => {
+      if (row < this.board.length - 1) //below
+        if (this.board[row][col] == this.board[row+1][col])
+          return true
+
+      if (col < this.board.length - 1) //to the right
+        if (this.board[row][col] == this.board[row][col+1])
+          return true
+
+      return false;
+    }
+
+    //check to see if any number is next to another equal number
+    for (let row = 0; row < this.board.length; row++)
+      for (let col = 0; col < this.board.length; col++)
+        if (number_is_combinable_lr(row, col))
+          return true;
+
+    return false;
+  }
+  
+  /**
+   * Slide or combine numbers on the board as far as possible in some direction.
+   *   - Zeros are empty cells, and any number can slide into it
+   *   - Two equal numbers that slide into each other combine into one by addition
+   *   - You can't chain combinations
+   * 
+   *   slideAwayFromStart -> are numbers sliding either right or down?
+   *   slideVertically -> are numbers sliding either up or down?
+   * 
+   * 
+   *
+   * The 'start' that 'slideAwayFromStart' is referring to is top left (board[0][0])
+   * You can control which of the four sides of a board to slide towards like so:
+   *   Right: slide_numbers_raw(true, false)
+   *   Left: slide_numbers_raw(false, false)
+   *   Up: slide_numbers_raw(false, true)
+   *   Down: slide_numbers_raw(true, true)
+   */
   slide_numbers_raw(slideAwayFromStart, slideVertically) {
     let lower_side;
     let higher_side;

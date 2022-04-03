@@ -164,5 +164,25 @@ export const UnitTests = () => {
         assert.equal(engine.zero_count, 15, "zeros not correctly updated after sliding the board");
       });
     });
+    describe("moves_available", function() {
+      let boardsize = 4;
+      let engine;
+      beforeEach(function() {
+        engine = new Engine(boardsize, 0)
+      });
+
+      it("correctly finds game end", function() {
+        assert.isTrue(engine.moves_available());
+        for (let row = 0, even = true; row < boardsize; row ++) {
+          for (let col = 0; col < boardsize; col ++) {
+            engine.board[row][col] = even ? 1 : 2;
+            even = !even;
+          }
+          even = !even;
+        }
+        engine.zero_count = 0;
+        assert.isFalse(engine.moves_available());
+      });
+    });
   });
 }
