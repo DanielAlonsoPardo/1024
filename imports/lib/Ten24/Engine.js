@@ -40,20 +40,19 @@ export class Engine {
  *   - Zeros are empty cells, and any number can slide into it
  *   - Two equal numbers that slide into each other combine into one by addition
  *   - You can't chain combinations
+ * 
+ *   slideAwayFromStart -> are numbers sliding either right or down?
+ *   slideVertically -> are numbers sliding either up or down?
+ * 
+ * 
+ *
+ * The 'start' that 'slideAwayFromStart' is referring to is top left (board[0][0])
+ * You can control which of the four sides of a board to slide towards like so:
+ *   Right: slide_numbers_raw(true, false)
+ *   Left: slide_numbers_raw(false, false)
+ *   Up: slide_numbers_raw(false, true)
+ *   Down: slide_numbers_raw(true, true)
  */
-
-  //
-  /**
-   * slide numbers from "higher" side to "lower" side
-   *
-   * the 'start' that 'slideAwayFromStart' is referring to is top left (board[0][0])
-   * You can control which of the four sides of a board to slide towards like so:
-   *   Right: slide_numbers_raw(true, false)
-   *   Left: slide_numbers_raw(false, false)
-   *   Up: slide_numbers_raw(false, true)
-   *   Down: slide_numbers_raw(true, true)
-   */
-//  slide_numbers_raw(high_position, low_position, vertical) {
   slide_numbers_raw(slideAwayFromStart, slideVertically) {
     let lower_side;
     let higher_side;
@@ -63,6 +62,7 @@ export class Engine {
     let cell_within_bounds;
     let set_cell
     let get_cell
+
 
     //sliding towards or away from start (0,0)?
     if (slideAwayFromStart) {//either right or down
@@ -107,6 +107,7 @@ export class Engine {
             //'to' can be combined with 'from'
             set_cell(row, to, get_cell(row, from) + get_cell(row, to));
             this.update_max_number(get_cell(row, to));
+            this.zero_count++;
             set_cell(row, from, 0);
             to = next_position(to);
           } else if (get_cell(row, from) != 0) {
@@ -117,7 +118,7 @@ export class Engine {
               set_cell(row, to, this.board[row][from]);
               set_cell(row, from, 0);
             }
-          }//else 'to' is zero and can be skipped
+          }
         }
         from = next_position(from);
       }
@@ -130,13 +131,12 @@ export class Engine {
    *  returns: true if it was successfully placed, false otherwise.
    */
   place_randomly(number) {
-    let empty_cell_count = this.count_empty_cells();
     if (number <= 0)
       return true;
-    if (empty_cell_count <= 0)
+    if (this.zero_count <= 0)
       return false;
 
-    let target_cell = Math.floor(empty_cell_count * this.rng.random());
+    let target_cell = Math.floor(this.zero_count * this.rng.random());
 
     let current_empty_cell = 0;
     for (let row = 0; row < this.board.length || current_empty_cell <= target_cell; row++) {
@@ -154,12 +154,13 @@ export class Engine {
     }
 
     this.update_max_number(number)
+    this.zero_count--;
 
     return true;
   }
 
   /**
-   *  count the number of empty cells on the board.
+   *  count the number of empty cells on the board and updates this.zero_count
    *  returns: the count
    */
   count_empty_cells() {
@@ -167,6 +168,7 @@ export class Engine {
     for (let row of this.board)
       for (let cell of row)
         if (cell == 0) count ++;
+    this.zero_count = count;
     return count;
   }
 

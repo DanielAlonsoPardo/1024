@@ -145,6 +145,24 @@ export const UnitTests = () => {
         assert.equal(engine.max_number, 16);
 
       });
+
+      it("keeps track of zeros on board", function() {
+        assert.equal(engine.zero_count, 16, "zeros not correctly initialized");
+        let i = boardsize**2;
+        while (i > 0) {
+          i--;
+          engine.place_randomly(1);
+          assert.equal(engine.zero_count, i, "zeros not correctly updated after random number placement");
+        }
+        engine.slide_numbers_raw(true, true);
+        assert.equal(engine.zero_count, 8, "zeros not correctly updated after sliding the board");
+        engine.slide_numbers_raw(true, true);
+        assert.equal(engine.zero_count, 12, "zeros not correctly updated after sliding the board");
+        engine.slide_numbers_raw(true, false);
+        assert.equal(engine.zero_count, 14, "zeros not correctly updated after sliding the board");
+        engine.slide_numbers_raw(true, false);
+        assert.equal(engine.zero_count, 15, "zeros not correctly updated after sliding the board");
+      });
     });
   });
 }
