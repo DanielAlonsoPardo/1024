@@ -17,6 +17,25 @@ import { Engine } from './Engine.js'
  *
  */
 
+class Game {
+  constructor() {
+  }
+
+  start_new() {}
+  get_score() {}
+  get_replay() {}
+  play_replay() {}
+  validate_replay() {}
+  game_ended() {}
+
+  move_right() {}
+  move_left() {}
+  move_up() {}
+  move_down() {}
+
+}
+
 export {
-  Engine
+  Engine,
+  Game
 };

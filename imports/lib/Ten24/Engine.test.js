@@ -163,6 +163,28 @@ export const UnitTests = () => {
         engine.slide_numbers_raw(true, false);
         assert.equal(engine.zero_count, 15, "zeros not correctly updated after sliding the board");
       });
+      it("keeps track of the turn count", function() {
+        let i = 0;
+        assert.isFalse(engine.slide_numbers_raw(true, false));
+        assert.isFalse(engine.slide_numbers_raw(true, true));
+        assert.isFalse(engine.slide_numbers_raw(false, false));
+        assert.isFalse(engine.slide_numbers_raw(false, true));
+        assert.equal(engine.move_count, 0);
+
+        while (i < boardsize**2) {
+          engine.place_randomly(1);
+          i++
+        }
+
+        assert.isTrue(engine.slide_numbers_raw(true, true));
+        assert.isTrue(engine.slide_numbers_raw(true, true));
+        assert.isFalse(engine.slide_numbers_raw(true, true));
+        assert.isTrue(engine.slide_numbers_raw(true, false));
+        assert.isTrue(engine.slide_numbers_raw(true, false));
+        assert.isFalse(engine.slide_numbers_raw(true, false));
+        assert.equal(engine.move_count, 4);
+
+      });
     });
     describe("moves_available", function() {
       let boardsize = 4;

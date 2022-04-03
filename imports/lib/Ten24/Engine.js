@@ -4,7 +4,7 @@ import MersenneTwister from 'mersenne-twister'
  * Attributes:
  *   board -> current gamestate. Is always a _square_ of size `boardsize`
  *   seed -> seed used when initializing the game
- *   move_count -> adds one on every call to slide_numbers_raw()
+ *   move_count -> adds one on every succesfull call to slide_numbers_raw()
  *   zero_count -> number of empty cells, updated on slide and random placement.
  *   max_number -> highest number on the board. updated on slide and random placement.
  */
@@ -94,6 +94,8 @@ export class Engine {
     let set_cell
     let get_cell
 
+    let a_number_moved = false;
+
 
     //sliding towards or away from start (0,0)?
     if (slideAwayFromStart) {//either right or down
@@ -132,6 +134,7 @@ export class Engine {
           if (get_cell(row, from) != 0) {
             set_cell(row, to, get_cell(row, from));
             set_cell(row, from, 0);
+            a_number_moved = true;
           }
         } else {
           if (get_cell(row, to) == get_cell(row, from)) {
@@ -141,6 +144,7 @@ export class Engine {
             this.zero_count++;
             set_cell(row, from, 0);
             to = next_position(to);
+            a_number_moved = true;
           } else if (get_cell(row, from) != 0) {
             //'to' can't be combined with 'from'
             to = next_position(to);
@@ -148,12 +152,16 @@ export class Engine {
               //there's room to slide 'to' towards 'from'
               set_cell(row, to, this.board[row][from]);
               set_cell(row, from, 0);
+              a_number_moved = true;
             }
           }
         }
         from = next_position(from);
       }
     }
+    if (a_number_moved)
+      this.move_count += 1;
+    return a_number_moved;
   }
 
   /**
