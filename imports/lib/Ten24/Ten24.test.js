@@ -1,8 +1,7 @@
 import { assert } from 'chai';
 
-import Ten24 from './Ten24.js';
-
 import Engine_test from './Engine.test.js'
+import Game_test from './Game.test.js'
 
 export const UnitTests = () => {
   describe("Ten24 tests", function () {
@@ -11,5 +10,6 @@ export const UnitTests = () => {
     });
 
     Engine_test.UnitTests();
+    Game_test.UnitTests();
   });
 }

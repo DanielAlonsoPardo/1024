@@ -5,13 +5,12 @@ import MersenneTwister from 'mersenne-twister'
  * Engine prototypes:
  *   update_max_number(number)
  *   moves_available(number) => boolean
- *   slide_numbers_raw(slideAwayFromStart, slideVertically)
- *   place_randomly(number)
+ *   slide_numbers_raw(slideAwayFromStart, slideVertically) => boolean
+ *   place_2_4() => boolean
+ *   place_randomly(number) => boolean
+ *   count_empty_cells() => int
+ *   update_game_state()
  *   log_board()
- *   count_empty_cells()
- *
- *
- *
  */
 
 /** Engine
@@ -203,6 +202,14 @@ export class Engine {
   }
 
   /**
+   * Place a 2 or a 4 on the board, randomly (on a 90/10 split)
+   * See `place_randomly()`
+   */
+  place_2_4() {
+    return this.place_randomly((this.rng.random() > 0.90) ? 2 : 4 );
+  }
+
+  /**
    *  Place a given number on the board, in a random empty cell.
    *    Updates game_state.
    *
@@ -250,6 +257,24 @@ export class Engine {
         if (cell == 0) count ++;
     this.game_state.zero_count = count;
     return count;
+  }
+
+  /** update_game_state()
+   *
+   * Updates max number on board and zero count.
+   *   Does not change turn count or score.
+   */
+  update_game_state() {
+    let count = 0;
+    let max = 0;
+    for (let row of this.board) {
+      for (let cell of row) {
+        if (cell == 0) count ++;
+        if (max < cell) max = cell;
+      }
+    }
+    this.game_state.zero_count = count;
+    this.game_state.max_number = max;
   }
 
   log_board = () => {
