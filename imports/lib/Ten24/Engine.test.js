@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import { Engine } from './Engine.js'
 
-export const UnitTests = () => {
+export const UnitTests = function() {
   describe("Engine tests", function () {
     let init_board = (eng, num) => {
       while (eng.place_randomly(num)) {
@@ -38,9 +38,9 @@ export const UnitTests = () => {
 
       it("slides to the right", function() {
         engine = new Engine(4, 0);
-        engine.board[0] = [0, 0, 1, 1];
+        engine.board[0] = [0, 4, 8, 4];
         engine.board[1] = [0, 1, 0, 0];
-        engine.board[2] = [1, 1, 1, 1];
+        engine.board[2] = [4, 8, 4, 0];
         engine.board[3] = [0, 1, 2, 1];
 
         engine.slide_numbers_raw(true, false);
@@ -49,51 +49,55 @@ export const UnitTests = () => {
         assert.equal(engine.board[1][3], 1, "number did not slide right");
 
 
-        assert.deepEqual(engine.board[0], [0, 0, 0, 2], "numbers did not slide to the right");
+        assert.deepEqual(engine.board[0], [0, 4, 8, 4], "numbers did not slide to the right");
         assert.deepEqual(engine.board[1], [0, 0, 0, 1], "numbers did not slide to the right");
-        assert.deepEqual(engine.board[2], [0, 0, 2, 2], "numbers did not slide to the right");
+        assert.deepEqual(engine.board[2], [0, 4, 8, 4], "numbers did not slide to the right");
         assert.deepEqual(engine.board[3], [0, 1, 2, 1], "numbers did not slide to the right");
       });
       it("slides to the left", function() {
         engine = new Engine(4, 0);
         engine.board[0] = [0, 0, 1, 1];
-        engine.board[1] = [0, 1, 0, 0];
-        engine.board[2] = [1, 1, 1, 1];
+        engine.board[1] = [0, 4, 8, 4];
+        engine.board[2] = [4, 8, 4, 0];
         engine.board[3] = [0, 1, 2, 1];
 
         engine.slide_numbers_raw(false, false);
 
         assert.deepEqual(engine.board[0], [2, 0, 0, 0], "numbers did not slide to the left (row 0)");
-        assert.deepEqual(engine.board[1], [1, 0, 0, 0], "numbers did not slide to the left (row 1)");
-        assert.deepEqual(engine.board[2], [2, 2, 0, 0], "numbers did not slide to the left (row 2)");
+        assert.deepEqual(engine.board[1], [4, 8, 4, 0], "numbers did not slide to the left (row 1)");
+        assert.deepEqual(engine.board[2], [4, 8, 4, 0], "numbers did not slide to the left (row 2)");
         assert.deepEqual(engine.board[3], [1, 2, 1, 0], "numbers did not slide to the left (row 3)");
       });
       it("slides down", function() {
         engine = new Engine(4, 0);
-        engine.board[0] = [0, 0, 1, 1];
-        engine.board[1] = [0, 1, 0, 0];
-        engine.board[2] = [1, 1, 1, 1];
-        engine.board[3] = [0, 1, 2, 1];
+        engine.board[0] = [0, 0, 4, 0];
+        engine.board[1] = [0, 1, 8, 4];
+        engine.board[2] = [1, 1, 4, 8];
+        engine.board[3] = [0, 1, 0, 4];
 
         engine.slide_numbers_raw(true, true);
-
-        assert.deepEqual(engine.board[0], [0, 0, 0, 0], "numbers did not slide down (row 0)");
-        assert.deepEqual(engine.board[1], [0, 0, 0, 0], "numbers did not slide down (row 1)");
-        assert.deepEqual(engine.board[2], [0, 1, 2, 1], "numbers did not slide down (row 2)");
-        assert.deepEqual(engine.board[3], [1, 2, 2, 2], "numbers did not slide down (row 3)");
+        try {
+          assert.deepEqual(engine.board[0], [0, 0, 0, 0], "numbers did not slide down (row 0)");
+          assert.deepEqual(engine.board[1], [0, 0, 4, 4], "numbers did not slide down (row 1)");
+          assert.deepEqual(engine.board[2], [0, 1, 8, 8], "numbers did not slide down (row 2)");
+          assert.deepEqual(engine.board[3], [1, 2, 4, 4], "numbers did not slide down (row 3)");
+        } catch(e) {
+          engine.log_board();
+          throw e;
+        }
       });
       it("slides up", function() {
         engine = new Engine(4, 0);
-        engine.board[0] = [0, 0, 1, 1];
-        engine.board[1] = [0, 1, 0, 0];
-        engine.board[2] = [1, 1, 1, 1];
-        engine.board[3] = [0, 1, 2, 1];
+        engine.board[0] = [0, 0, 0, 4];
+        engine.board[1] = [0, 1, 4, 8];
+        engine.board[2] = [1, 1, 8, 4];
+        engine.board[3] = [0, 1, 4, 0];
 
         engine.slide_numbers_raw(false, true);
 
-        assert.deepEqual(engine.board[0], [1, 2, 2, 2], "numbers did not slide down (row 0)");
-        assert.deepEqual(engine.board[1], [0, 1, 2, 1], "numbers did not slide down (row 1)");
-        assert.deepEqual(engine.board[2], [0, 0, 0, 0], "numbers did not slide down (row 2)");
+        assert.deepEqual(engine.board[0], [1, 2, 4, 4], "numbers did not slide down (row 0)");
+        assert.deepEqual(engine.board[1], [0, 1, 8, 8], "numbers did not slide down (row 1)");
+        assert.deepEqual(engine.board[2], [0, 0, 4, 4], "numbers did not slide down (row 2)");
         assert.deepEqual(engine.board[3], [0, 0, 0, 0], "numbers did not slide down (row 3)");
       });
     });

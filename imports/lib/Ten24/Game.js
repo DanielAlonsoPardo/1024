@@ -1,13 +1,13 @@
 import { Engine } from './Engine.js'
-/**  Methods:
+/** Methods:
  *    - restart(seed)
  *    - move_<up|down|left|right>() => boolean
- *    - game_ended() => boolean
- *    - get_game_record() => recorded_game
+ *    - ended() => boolean
+ *    - get_record() => recorded_game
+ *    - get_score() => score
  *
  *  Attributes:
  *    - engine
- *
  */
 export class Game {
   static Default_boardsize = 4;
@@ -19,6 +19,11 @@ export class Game {
   };
 
   constructor(seed) {
+    this.restart(seed);
+  }
+
+  restart(seed) {
+
     this.game_record = [];
     this.engine = new Engine(Game.Default_boardsize, seed);
     //gotta put something on the board so the game can start
@@ -26,12 +31,26 @@ export class Game {
   }
 
   /**
-   * Retrieves a list of every move performed so far.
-   *   given at game start.
+   * Checks to see if the game has ended, that is to say,
+   *   if there are no more legal moves left.
    */
-  get_recorded_game() {
-    return [...this.game_record];
+  ended() {
+    return !this.engine.moves_available();
+  }
+
+  /**
+   * Retrieves a list of every move performed so far.
+   */
+  get_record() {
+    return {
+      input: [...this.game_record],
+      seed: this.engine.seed
+    }
   };
+
+  get_score() {
+    return this.engine.get
+  }
 
   /** move
    *  Performs one game turn. A game turn has the following phases:
@@ -46,7 +65,7 @@ export class Game {
    *  Returns: true if the move was performed, false otherwise.
    */
   move(Move_code) {
-    let res;
+    let res = false;
     switch(Move_code) {
       case Game.Move_code.Up:
         res = this.engine.slide_numbers_raw(false, true);
@@ -63,8 +82,10 @@ export class Game {
       default:
         throw 'In Game.move(): given Move_code (' + Move_code + ') is not a valid direction'
     }
-    if (res)
+    if (res) {
       this.game_record.push(Move_code);
+      this.engine.place_2_4();
+    }
     return res;
   }
   /*syntax sugar*/

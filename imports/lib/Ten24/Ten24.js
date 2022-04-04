@@ -1,5 +1,6 @@
 import { Engine } from './Engine.js'
 import { Game } from './Game.js'
+import { Game_replay } from './Game_replay.js'
 
 /** Ten24
  *
@@ -15,5 +16,6 @@ import { Game } from './Game.js'
 
 export {
   Engine,
+  Game_replay,
   Game
 };

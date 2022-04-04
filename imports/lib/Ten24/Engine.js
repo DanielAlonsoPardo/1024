@@ -4,7 +4,7 @@ import MersenneTwister from 'mersenne-twister'
  * 
  * Engine prototypes:
  *   update_max_number(number)
- *   moves_available(number) => boolean
+ *   moves_available() => boolean
  *   slide_numbers_raw(slideAwayFromStart, slideVertically) => boolean
  *   place_2_4() => boolean
  *   place_randomly(number) => boolean
@@ -70,7 +70,7 @@ export class Engine {
    * Returns true if there are any moves left on the board that are possible.
    *         false otherwise.
    */
-  moves_available(number) {
+  moves_available() {
     if (this.game_state.zero_count > 0)
       return true;
 
@@ -187,7 +187,7 @@ export class Engine {
             to = next_position(to);
             if (from != to) {
               //there's room to slide 'to' towards 'from'
-              set_cell(row, to, this.board[row][from]);
+              set_cell(row, to, get_cell(row, from));
               set_cell(row, from, 0);
               a_number_moved = true;
             }
@@ -206,7 +206,7 @@ export class Engine {
    * See `place_randomly()`
    */
   place_2_4() {
-    return this.place_randomly((this.rng.random() > 0.90) ? 2 : 4 );
+    return this.place_randomly((this.rng.random() < 0.90) ? 2 : 4 );
   }
 
   /**

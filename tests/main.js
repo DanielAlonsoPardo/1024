@@ -9,6 +9,8 @@ let UnitTests = {
 }
 
 describe("Sanity check", function () {
+  
+  this.timeout(1000);
   if (Meteor.isClient) {
     it("CLIENT CHECK", function () {
       assert.strictEqual(Meteor.isServer, false);
