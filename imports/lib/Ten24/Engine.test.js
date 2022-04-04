@@ -116,14 +116,14 @@ export const UnitTests = () => {
 
       it("correctly updates max number after random number placement", function() {
         //new board
-        assert.equal(engine.max_number, 0);
+        assert.equal(engine.game_state.max_number, 0);
         //when adding a new number at random
         engine.place_randomly(1);
-        assert.equal(engine.max_number, 1);
+        assert.equal(engine.game_state.max_number, 1);
         engine.place_randomly(2);
-        assert.equal(engine.max_number, 2);
+        assert.equal(engine.game_state.max_number, 2);
         engine.place_randomly(1);
-        assert.equal(engine.max_number, 2);
+        assert.equal(engine.game_state.max_number, 2);
       });
 
       it("correctly updates max number after making a move", function() {
@@ -132,36 +132,36 @@ export const UnitTests = () => {
             engine.board[row][col] = 1;
 
         engine.slide_numbers_raw(true, false);
-        assert.equal(engine.max_number, 2);
+        assert.equal(engine.game_state.max_number, 2);
         engine.slide_numbers_raw(true, false);
-        assert.equal(engine.max_number, 4);
+        assert.equal(engine.game_state.max_number, 4);
         engine.slide_numbers_raw(true, false);
-        assert.equal(engine.max_number, 4);
+        assert.equal(engine.game_state.max_number, 4);
         engine.slide_numbers_raw(true, true);
-        assert.equal(engine.max_number, 8);
+        assert.equal(engine.game_state.max_number, 8);
         engine.slide_numbers_raw(true, true);
-        assert.equal(engine.max_number, 16);
+        assert.equal(engine.game_state.max_number, 16);
         engine.slide_numbers_raw(true, true);
-        assert.equal(engine.max_number, 16);
+        assert.equal(engine.game_state.max_number, 16);
 
       });
 
       it("keeps track of zeros on board", function() {
-        assert.equal(engine.zero_count, 16, "zeros not correctly initialized");
+        assert.equal(engine.game_state.zero_count, 16, "zeros not correctly initialized");
         let i = boardsize**2;
         while (i > 0) {
           i--;
           engine.place_randomly(1);
-          assert.equal(engine.zero_count, i, "zeros not correctly updated after random number placement");
+          assert.equal(engine.game_state.zero_count, i, "zeros not correctly updated after random number placement");
         }
         engine.slide_numbers_raw(true, true);
-        assert.equal(engine.zero_count, 8, "zeros not correctly updated after sliding the board");
+        assert.equal(engine.game_state.zero_count, 8, "zeros not correctly updated after sliding the board");
         engine.slide_numbers_raw(true, true);
-        assert.equal(engine.zero_count, 12, "zeros not correctly updated after sliding the board");
+        assert.equal(engine.game_state.zero_count, 12, "zeros not correctly updated after sliding the board");
         engine.slide_numbers_raw(true, false);
-        assert.equal(engine.zero_count, 14, "zeros not correctly updated after sliding the board");
+        assert.equal(engine.game_state.zero_count, 14, "zeros not correctly updated after sliding the board");
         engine.slide_numbers_raw(true, false);
-        assert.equal(engine.zero_count, 15, "zeros not correctly updated after sliding the board");
+        assert.equal(engine.game_state.zero_count, 15, "zeros not correctly updated after sliding the board");
       });
       it("keeps track of the turn count", function() {
         let i = 0;
@@ -169,11 +169,11 @@ export const UnitTests = () => {
         assert.isFalse(engine.slide_numbers_raw(true, true));
         assert.isFalse(engine.slide_numbers_raw(false, false));
         assert.isFalse(engine.slide_numbers_raw(false, true));
-        assert.equal(engine.move_count, 0);
+        assert.equal(engine.game_state.move_count, 0);
 
         while (i < boardsize**2) {
           engine.place_randomly(1);
-          i++
+          i++;
         }
 
         assert.isTrue(engine.slide_numbers_raw(true, true));
@@ -182,7 +182,7 @@ export const UnitTests = () => {
         assert.isTrue(engine.slide_numbers_raw(true, false));
         assert.isTrue(engine.slide_numbers_raw(true, false));
         assert.isFalse(engine.slide_numbers_raw(true, false));
-        assert.equal(engine.move_count, 4);
+        assert.equal(engine.game_state.move_count, 4);
 
       });
     });
@@ -202,7 +202,7 @@ export const UnitTests = () => {
           }
           even = !even;
         }
-        engine.zero_count = 0;
+        engine.game_state.zero_count = 0;
         assert.isFalse(engine.moves_available());
       });
     });

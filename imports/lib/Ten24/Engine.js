@@ -1,12 +1,40 @@
 import MersenneTwister from 'mersenne-twister'
 
+/* Index
+ * 
+ * Engine prototypes:
+ *   update_max_number(number)
+ *   moves_available(number) => boolean
+ *   slide_numbers_raw(slideAwayFromStart, slideVertically)
+ *   place_randomly(number)
+ *   log_board()
+ *   count_empty_cells()
+ *
+ *
+ *
+ */
+
+/** Engine
+ *
+ * Engine for a 2048-like game where you slide numbers around and manage rng.
+ * This engine features:
+ *   An nxn board that you can place numbers on.
+ *   Gamestate tracking (turn counter, score, max number on board...)
+ *   An included, seedable random number generator
+ *
+ * The purpose of including the RNG is to enable deterministic outcomes,
+ *   for example to allow replaying recorded games.
+ */
+
 /**
  * Attributes:
- *   board -> current gamestate. Is always a _square_ of size `boardsize`
+ *   board -> The board, containing all numbers in play.
+                It is a square of side `boardsize`, typically 4x4.
  *   seed -> seed used when initializing the game
- *   move_count -> adds one on every succesfull call to slide_numbers_raw()
- *   zero_count -> number of empty cells, updated on slide and random placement.
- *   max_number -> highest number on the board. updated on slide and random placement.
+ *   game_state ->
+ *     move_count -> adds one on every succesfull call to slide_numbers_raw()
+ *     zero_count -> number of empty cells, updated on slide and random placement.
+ *     max_number -> highest number on the board. updated on slide and random placement.
  */
 export class Engine {
   /* Creates an empty board, ready to play */
@@ -21,9 +49,11 @@ export class Engine {
     this.seed = seed;
     this.rng = new MersenneTwister(seed);
 
-    this.move_count = 0;
-    this.zero_count = boardsize**2;
-    this.max_number = 0;
+    this.game_state = {
+      move_count: 0,
+      zero_count: boardsize**2,
+      max_number: 0
+    };
   }
 
   /**
@@ -31,8 +61,8 @@ export class Engine {
    *
    */
   update_max_number(number) {
-    if (this.max_number < number)
-      this.max_number = number;
+    if (this.game_state.max_number < number)
+      this.game_state.max_number = number;
   }
 
   /** moves_available
@@ -40,7 +70,7 @@ export class Engine {
    *         false otherwise.
    */
   moves_available(number) {
-    if (this.zero_count > 0)
+    if (this.game_state.zero_count > 0)
       return true;
 
     //true if given cell has a combinable number to the right, or below
@@ -66,16 +96,21 @@ export class Engine {
     return false;
   }
   
-  /**
-   * Slide or combine numbers on the board as far as possible in some direction.
+  /** slide_numbers_raw
+   *
+   * Slide numbers on the board in a given direction, if the move is legal.
+   *   A move is legal if it results in movement on the board.
+   *   Game stats (like turn counter) are updated if the move succeeds.
+   *
+   *   slideAwayFromStart -> are numbers sliding either right or down?
+   *   slideVertically    -> are numbers sliding either up or down?
+   *
+   *   Returns: true if the slide was succesful, false otherwise.
+   * 
+   * Some rules for sliding:   
    *   - Zeros are empty cells, and any number can slide into it
    *   - Two equal numbers that slide into each other combine into one by addition
    *   - You can't chain combinations
-   * 
-   *   slideAwayFromStart -> are numbers sliding either right or down?
-   *   slideVertically -> are numbers sliding either up or down?
-   * 
-   * 
    *
    * The 'start' that 'slideAwayFromStart' is referring to is top left (board[0][0])
    * You can control which of the four sides of a board to slide towards like so:
@@ -141,7 +176,7 @@ export class Engine {
             //'to' can be combined with 'from'
             set_cell(row, to, get_cell(row, from) + get_cell(row, to));
             this.update_max_number(get_cell(row, to));
-            this.zero_count++;
+            this.game_state.zero_count++;
             set_cell(row, from, 0);
             to = next_position(to);
             a_number_moved = true;
@@ -160,22 +195,25 @@ export class Engine {
       }
     }
     if (a_number_moved)
-      this.move_count += 1;
+      this.game_state.move_count += 1;
     return a_number_moved;
   }
 
   /**
-   *  place a given number on the board, in a random empty cell.
+   *  Place a given number on the board, in a random empty cell.
+   *    Updates game_state.
    *
-   *  returns: true if it was successfully placed, false otherwise.
+   *    number -> number to place on board.
+   *
+   *    returns: true if it was successfully placed, false otherwise.
    */
   place_randomly(number) {
     if (number <= 0)
       return true;
-    if (this.zero_count <= 0)
+    if (this.game_state.zero_count <= 0)
       return false;
 
-    let target_cell = Math.floor(this.zero_count * this.rng.random());
+    let target_cell = Math.floor(this.game_state.zero_count * this.rng.random());
 
     let current_empty_cell = 0;
     for (let row = 0; row < this.board.length || current_empty_cell <= target_cell; row++) {
@@ -193,13 +231,13 @@ export class Engine {
     }
 
     this.update_max_number(number)
-    this.zero_count--;
+    this.game_state.zero_count--;
 
     return true;
   }
 
   /**
-   *  count the number of empty cells on the board and updates this.zero_count
+   *  count the number of empty cells on the board and updates this.game_state.zero_count
    *  returns: the count
    */
   count_empty_cells() {
@@ -207,7 +245,7 @@ export class Engine {
     for (let row of this.board)
       for (let cell of row)
         if (cell == 0) count ++;
-    this.zero_count = count;
+    this.game_state.zero_count = count;
     return count;
   }
 
