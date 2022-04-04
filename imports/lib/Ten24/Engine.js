@@ -35,6 +35,7 @@ import MersenneTwister from 'mersenne-twister'
  *     move_count -> adds one on every succesfull call to slide_numbers_raw()
  *     zero_count -> number of empty cells, updated on slide and random placement.
  *     max_number -> highest number on the board. updated on slide and random placement.
+ *     score -> current score. Increases every time two numbers combine, by the resulting number.
  */
 export class Engine {
   /* Creates an empty board, ready to play */
@@ -52,7 +53,8 @@ export class Engine {
     this.game_state = {
       move_count: 0,
       zero_count: boardsize**2,
-      max_number: 0
+      max_number: 0,
+      score: 0
     };
   }
 
@@ -176,6 +178,7 @@ export class Engine {
             //'to' can be combined with 'from'
             set_cell(row, to, get_cell(row, from) + get_cell(row, to));
             this.update_max_number(get_cell(row, to));
+            this.game_state.score += get_cell(row, to);
             this.game_state.zero_count++;
             set_cell(row, from, 0);
             to = next_position(to);

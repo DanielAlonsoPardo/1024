@@ -4,6 +4,13 @@ import { Engine } from './Engine.js'
 
 export const UnitTests = () => {
   describe("Engine tests", function () {
+    let init_board = (eng, num) => {
+      while (eng.place_randomly(num)) {
+        //nop
+      }
+          
+      return eng;
+    }
     it("new board is correctly constructed", function() {
       const boardsize = 4;
       let engine = new Engine(4, 0);
@@ -184,6 +191,23 @@ export const UnitTests = () => {
         assert.isFalse(engine.slide_numbers_raw(true, false));
         assert.equal(engine.game_state.move_count, 4);
 
+      });
+      it("updates score correctly", function() {
+        try {
+          init_board(engine, 1);
+          assert.equal(engine.game_state.score, 0, "expected score to be 0");
+          engine.slide_numbers_raw(true, true);
+          assert.equal(engine.game_state.score, 16, "expected score to be 16");
+          engine.slide_numbers_raw(true, true);
+          assert.equal(engine.game_state.score, 32, "expected score to be 32");
+          engine.slide_numbers_raw(true, false);
+          assert.equal(engine.game_state.score, 48, "expected score to be 48");
+          engine.slide_numbers_raw(true, false);
+          assert.equal(engine.game_state.score, 64, "expected score to be 64");
+        } catch (e) {
+          engine.log_board();
+          throw e;
+        }
       });
     });
     describe("moves_available", function() {
