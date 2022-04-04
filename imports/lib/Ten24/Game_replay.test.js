@@ -8,32 +8,23 @@ export const UnitTests = function() {
 
     let game;
     beforeEach(function() {
-      game = new Game(0);
-    });
-    it.skip("Replays a game correctly.", function() {
+      game = new Game(Math.random());
       while(!game.ended()) {
         game.move_up();
-              game.engine.log_board();
-              console.log(game.engine.game_state);
         game.move_down();
-              game.engine.log_board();
-              console.log(game.engine.game_state);
         game.move_left();
-              game.engine.log_board();
-              console.log(game.engine.game_state);
         game.move_right();
-              game.engine.log_board();
-              console.log(game.engine.game_state);
+      }
+    });
+    it("Replays a game correctly.", function() {
+      let recorded_game = game.get_record()
+      let replay = new Game_replay(recorded_game);
+
+      for (let ret of replay) {
       }
 
-      let replay = new Game_replay(game.get_record());
-//      game.engine.log_board();
-//      replay.game.engine.log_board();
-
-//      for (let ret of replay) {
-//        replay.game.engine.log_board();
-//      }
-
+      assert.deepEqual(replay.game.get_record(), recorded_game);
     });
+    it("Validates real games correctly")
   });
 }

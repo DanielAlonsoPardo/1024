@@ -49,13 +49,13 @@ export class Game_replay {
   next() {
     if (this.done())
       return { done: true };
+
     let move = this.recorded_game.input[this.movement_counter];
-    value = this.game.move(move);
     this.movement_counter++;
 
     return {
       done: false,
-      value
+      value: this.game.move(move)
     }
   }
 
@@ -63,8 +63,6 @@ export class Game_replay {
    * Returns whether or not there are no more moves to process
    */
   done() {
-    console.log("this.movement_counter = ", this.movement_counter)
-    console.log("this.recorded_game.input.length = ",this.recorded_game.input.length)
     return this.movement_counter >= this.recorded_game.input.length;
   }
 
