@@ -7,6 +7,7 @@ export const UnitTests = function() {
   describe("Game_replay tests", function() {
 
     let game;
+    let replay;
     beforeEach(function() {
       game = new Game(Math.random());
       while(!game.ended()) {
@@ -15,16 +16,21 @@ export const UnitTests = function() {
         game.move_left();
         game.move_right();
       }
+      replay = new Game_replay(game.get_record());
     });
     it("Replays a game correctly.", function() {
-      let recorded_game = game.get_record()
-      let replay = new Game_replay(recorded_game);
+      replay.play();
 
-      for (let ret of replay) {
-      }
-
-      assert.deepEqual(replay.game.get_record(), recorded_game);
+      assert.deepEqual(replay.game.get_record(), game.get_record());
     });
-    it("Validates real games correctly")
+    it("Iterates correctly.", function() {
+      for (let ret of replay) {/**/}
+
+      assert.deepEqual(replay.game.get_record(), game.get_record());
+    });
+    it("Validates real games correctly", function() {
+      let res = replay.validate(game.get_score());
+      assert.isTrue(res, "fails to validate normal game");
+    });
   });
 }

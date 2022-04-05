@@ -66,20 +66,23 @@ export class Game_replay {
     return this.movement_counter >= this.recorded_game.input.length;
   }
 
-  // true if there are no more moves to process
+
   rewind() {
+    this.movement_counter = 0;
+    this.game = new Game(recorded_game.seed);
     return false;
   }
 
   // plays the current game until all input is consumed.
   play() {
-    return false;
+    for (let x of this) {/**/}
   }
 
   // like play(), but additionally tells you if
-  //   the replay results in the given game state.
-  validate(target_game_state) {
-    return false;
+  //   the replay results in the given score.
+  validate(target_score) {
+    this.play();
+    return this.game.get_score() == target_score;
   }
 
 }

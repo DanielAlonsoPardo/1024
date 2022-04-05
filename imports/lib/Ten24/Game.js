@@ -49,7 +49,7 @@ export class Game {
   };
 
   get_score() {
-    return this.engine.get
+    return this.engine.score;
   }
 
   /** move
