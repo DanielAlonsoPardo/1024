@@ -1,0 +1,9 @@
+.ten24-container {
+  width: 100%;
+}
+
+.ten24-container .ten24-board {
+  position: relative;
+  left: 50%;
+  margin-left: -250px;
+}
