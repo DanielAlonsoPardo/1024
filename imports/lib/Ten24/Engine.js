@@ -162,6 +162,7 @@ export class Engine {
           if (get_cell(row, to) == get_cell(row, from)) {
             //'to' can be combined with 'from'
             this.slide_callback(row, from, to, slideAwayFromStart, slideVertically);
+            this.combine_callback(row, from, to, slideAwayFromStart, slideVertically);
             set_cell(row, to, get_cell(row, from) + get_cell(row, to));
             this.update_max_number(get_cell(row, to));
             this.game_state.score += get_cell(row, to);
@@ -304,27 +305,6 @@ export class Engine {
     this.callbacks.on_slide = callback;
   }
 
-  /** on_combine
-   *  Provides a hook to execute callbacks before combining numbers
-   *
-   *  callback(numberSlid, from, to, newNumber, slideAwayFromStart, slideVertically)
-   *
-   *
-   */
-  on_combine(callback) {
-    this.callbacks.on_combine = callback;
-  }
-
-  /** on_place(callback)
-   *  Provides a hook to execute callbacks on placing numbers.
-   *
-   *  callback(numberPlaced)
-   *    numberPlaced: numberInfo of the number that was just placed on the board
-   */
-  on_place(callback) {
-    this.callbacks.on_place = callback;
-  }
-
   slide_callback(row, from, to, slideAwayFromStart, slideVertically) {
     if (!this.callbacks?.on_slide)
       return;
@@ -345,7 +325,46 @@ export class Engine {
     }
 
     this.callbacks.on_slide(numberInfo, slideInfo);
+  }
 
+  /** on_combine
+   *  Provides a hook to execute callbacks before combining numbers
+   *
+   *  callback(combinedNumberInfo)
+   *
+   *
+   */
+  on_combine(callback) {
+    this.callbacks.on_combine = callback;
+  }
+
+  combine_callback(row, from, to, slideAwayFromStart, slideVertically) {
+    if (!this.callbacks?.on_combine)
+      return;
+
+    let get_cell = (slideVertically ? this.get_cell_vertical : this.get_cell_horizontal);
+    let get_row = (slideAwayFromStart ? (row, col) => col : (row, col) => row);
+    let get_col = (slideAwayFromStart ? (row, col) => row : (row, col) => col);
+
+    let combinedNumber = {
+      value: get_cell(row, from) + get_cell(row, to),
+      position: {
+        row: get_row(row, to),
+        column: get_col(row, to)
+      }
+    }
+
+    this.callbacks.on_combine(combinedNumber);
+  }
+
+  /** on_place(callback)
+   *  Provides a hook to execute callbacks on placing numbers.
+   *
+   *  callback(numberPlaced)
+   *    numberPlaced: numberInfo of the number that was just placed on the board
+   */
+  on_place(callback) {
+    this.callbacks.on_place = callback;
   }
 
   set_cell_vertical = (col, cell, value) => this.board[cell][col] = value

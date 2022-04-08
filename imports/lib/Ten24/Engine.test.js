@@ -270,14 +270,16 @@ export const UnitTests = function() {
         assert.equal(executed, 2, "did not execute all callbacks");
         assert.equal(args.numberToSlide?.position?.row, 1, "Incorrect number row position");
         assert.equal(args.numberToSlide?.position?.column, 3, "Incorrect number column position");
-        assert.equal(args.slideInfo?.to, 0, "Incorrect 'to' argument");
         assert.equal(args.numberToSlide?.value, 333, "Incorrect number value");
+        assert.equal(args.slideInfo?.to, 0, "Incorrect 'to' argument");
       });
 
-      it.skip("calls on_combine", function() {
+      it("calls on_combine", function() {
         let executed = false;
-        let f = () => {
+        let args;
+        let f = (combinedNumberInfo) => {
           executed = true;
+          args = { combinedNumberInfo };
         };
 
         engine.on_combine(f);
@@ -289,7 +291,10 @@ export const UnitTests = function() {
         engine.slide_numbers_raw(true, true); //slide down and combine
 
         assert.isTrue(executed, "did not execute callback");
-        assert.isTrue(false, "gets correct parameters");
+        assert.exists(args?.combinedNumberInfo, "gets parameters");
+        assert.equal(args.combinedNumberInfo?.position?.row, 3, "Incorrect number row position");
+        assert.equal(args.combinedNumberInfo?.position?.column, 3, "Incorrect number column position");
+        assert.equal(args.combinedNumberInfo?.value, 333*2, "Incorrect number value");
       });
 
       it("calls on_place", function() {
