@@ -129,57 +129,18 @@ export class Engine {
    *   Down: slide_numbers_raw(true, true)
    */
   slide_numbers_raw(slideAwayFromStart, slideVertically) {
-    let lower_side;
-    let higher_side;
     //these functions are essentially used to iterate through board cells
     //they change depending on what side you're sliding towards
-    let next_position;
-    let cell_within_bounds;
-    let set_cell
-    let get_cell
-    //helpers for hooks
-    let get_col
-    let get_row
-    let get_numberSlid = (row, from) => {
-      return {
-        value: get_cell(row, from),
-        position: {
-          row: get_row(row, from),
-          column: get_col(row, from)
-        }
-      }
-    }
+    //sliding right/down or up/left?
+    let lower_side = (slideAwayFromStart ? this.board.length - 1 : 0);
+    let higher_side = (slideAwayFromStart ? 0 : this.board.length - 1);
+    let next_position = (slideAwayFromStart ? (c => c-1) : (c => c+1) );
+    let cell_within_bounds = (slideAwayFromStart ? (c => (c >= higher_side)) : (c => (c <= higher_side)));
+    //sliding up or down?
+    let set_cell = (slideVertically ? this.set_cell_vertical : this.set_cell_horizontal);
+    let get_cell = (slideVertically ? this.get_cell_vertical : this.get_cell_horizontal);
 
     let a_number_moved = false;
-
-
-    //sliding towards or away from start (0,0)?
-    if (slideAwayFromStart) {//either right or down
-      lower_side = this.board.length - 1;
-      higher_side = 0;
-      next_position = c => c-1;
-      cell_within_bounds = c => (c >= higher_side)
-    } else {//either up or left
-      lower_side = 0;
-      higher_side = this.board.length - 1;
-      next_position = c => c+1;
-      cell_within_bounds = c => (c <= higher_side);
-    }
-
-    //sliding vertically or horizontally?
-    if (slideVertically) {//either up or down
-      //go column by column
-      set_cell = (col, cell, value) => this.board[cell][col] = value
-      get_cell = (col, cell) => this.board[cell][col]
-      get_col = (row, col) => row
-      get_row = (row, col) => col
-    } else {//either left or right
-      //go row by row
-      set_cell = (row, cell, value) => this.board[row][cell] = value
-      get_cell = (row, cell) => this.board[row][cell]
-      get_col = (row, col) => col
-      get_row = (row, col) => row
-    }
 
     //for each row (or column) of cells
     for (let row = 0; row < this.board.length; row++) {
@@ -192,27 +153,20 @@ export class Engine {
           //'to' cell is empty -> slide 'from' into it
           //...if 'from' has something
           if (get_cell(row, from) != 0) {
-            if (this.callbacks?.on_slide)
-              this.callbacks.on_slide(get_numberSlid(row, from),
-                                      { from, to, slideAwayFromStart, slideVertically });
+            this.slide_callback(row, from, to, slideAwayFromStart, slideVertically);
             set_cell(row, to, get_cell(row, from));
             set_cell(row, from, 0);
             a_number_moved = true;
           }
         } else {
           if (get_cell(row, to) == get_cell(row, from)) {
-            if (this.callbacks?.on_slide)
-              this.callbacks.on_slide(get_numberSlid(row, from),
-                                      { from, to, slideAwayFromStart, slideVertically });
             //'to' can be combined with 'from'
+            this.slide_callback(row, from, to, slideAwayFromStart, slideVertically);
             set_cell(row, to, get_cell(row, from) + get_cell(row, to));
             this.update_max_number(get_cell(row, to));
             this.game_state.score += get_cell(row, to);
             this.game_state.zero_count++;
             set_cell(row, from, 0);
-            if (this.callbacks?.on_combine){
-              this.callbacks.on_combine();
-            }
             a_number_moved = true;
             to = next_position(to);
           } else if (get_cell(row, from) != 0) {
@@ -339,7 +293,7 @@ export class Engine {
    */
 
   /** on_slide
-   *  Provides a hook to execute callbacks after sliding numbers.
+   *  Provides a hook to execute callbacks before sliding numbers.
    *  Combining numbers implies at least one on_slide event.
    *
    *  callback(numberToSlide, slideInfo)
@@ -351,7 +305,7 @@ export class Engine {
   }
 
   /** on_combine
-   *  Provides a hook to execute callbacks on combining numbers
+   *  Provides a hook to execute callbacks before combining numbers
    *
    *  callback(numberSlid, from, to, newNumber, slideAwayFromStart, slideVertically)
    *
@@ -371,6 +325,33 @@ export class Engine {
     this.callbacks.on_place = callback;
   }
 
+  slide_callback(row, from, to, slideAwayFromStart, slideVertically) {
+    if (!this.callbacks?.on_slide)
+      return;
+
+    let get_cell = (slideVertically ? this.get_cell_vertical : this.get_cell_horizontal);
+    let get_row = (slideAwayFromStart ? (row, col) => col : (row, col) => row);
+    let get_col = (slideAwayFromStart ? (row, col) => row : (row, col) => col);
+
+    let numberInfo = {
+      value: get_cell(row, from),
+      position: {
+        row: get_row(row, from),
+        column: get_col(row, from)
+      }
+    }
+    let slideInfo = {
+      from, to, slideAwayFromStart, slideVertically
+    }
+
+    this.callbacks.on_slide(numberInfo, slideInfo);
+
+  }
+
+  set_cell_vertical = (col, cell, value) => this.board[cell][col] = value
+  get_cell_vertical = (col, cell) => this.board[cell][col]
+  set_cell_horizontal = (row, cell, value) => this.board[row][cell] = value
+  get_cell_horizontal = (row, cell) => this.board[row][cell]
 
   log_board = () => {
     for (const l of this.board)
