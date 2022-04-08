@@ -137,6 +137,18 @@ export class Engine {
     let cell_within_bounds;
     let set_cell
     let get_cell
+    //helpers for hooks
+    let get_col
+    let get_row
+    let get_numberSlid = (row, from) => {
+      return {
+        value: get_cell(row, from),
+        position: {
+          row: get_row(row, from),
+          column: get_col(row, from)
+        }
+      }
+    }
 
     let a_number_moved = false;
 
@@ -159,10 +171,14 @@ export class Engine {
       //go column by column
       set_cell = (col, cell, value) => this.board[cell][col] = value
       get_cell = (col, cell) => this.board[cell][col]
+      get_col = (row, col) => row
+      get_row = (row, col) => col
     } else {//either left or right
       //go row by row
       set_cell = (row, cell, value) => this.board[row][cell] = value
       get_cell = (row, cell) => this.board[row][cell]
+      get_col = (row, col) => col
+      get_row = (row, col) => row
     }
 
     //for each row (or column) of cells
@@ -176,20 +192,29 @@ export class Engine {
           //'to' cell is empty -> slide 'from' into it
           //...if 'from' has something
           if (get_cell(row, from) != 0) {
+            if (this.callbacks?.on_slide)
+              this.callbacks.on_slide(get_numberSlid(row, from),
+                                      { from, to, slideAwayFromStart, slideVertically });
             set_cell(row, to, get_cell(row, from));
             set_cell(row, from, 0);
             a_number_moved = true;
           }
         } else {
           if (get_cell(row, to) == get_cell(row, from)) {
+            if (this.callbacks?.on_slide)
+              this.callbacks.on_slide(get_numberSlid(row, from),
+                                      { from, to, slideAwayFromStart, slideVertically });
             //'to' can be combined with 'from'
             set_cell(row, to, get_cell(row, from) + get_cell(row, to));
             this.update_max_number(get_cell(row, to));
             this.game_state.score += get_cell(row, to);
             this.game_state.zero_count++;
             set_cell(row, from, 0);
-            to = next_position(to);
+            if (this.callbacks?.on_combine){
+              this.callbacks.on_combine();
+            }
             a_number_moved = true;
+            to = next_position(to);
           } else if (get_cell(row, from) != 0) {
             //'to' can't be combined with 'from'
             to = next_position(to);
@@ -293,8 +318,33 @@ export class Engine {
     this.game_state.max_number = max;
   }
 
+
+  /** numberInfo
+   *  Describes a given number on the board
+   *
+   *    numberInfo: {
+   *      value,
+   *      position: { column, row }
+   *    }
+   */
+  /** slideInfo
+   *  Describe how far and in what direction a given number on the board moved
+   *
+   *    slideInfo: {
+   *      from, // relative to the slide direction
+   *      to, // relative to the slide direction
+   *      slideAwayFromStart, // see slide_numbers_raw
+   *      slideVertically
+   *    }
+   */
+
   /** on_slide
-   *  Provides a hook to execute callbacks on sliding numbers
+   *  Provides a hook to execute callbacks after sliding numbers.
+   *  Combining numbers implies at least one on_slide event.
+   *
+   *  callback(numberToSlide, slideInfo)
+   *    numberToSlide -> numberInfo of the number (before moving)
+   *    slideInfo -> type of slide to be performed
    */
   on_slide(callback) {
     this.callbacks.on_slide = callback;
@@ -302,6 +352,10 @@ export class Engine {
 
   /** on_combine
    *  Provides a hook to execute callbacks on combining numbers
+   *
+   *  callback(numberSlid, from, to, newNumber, slideAwayFromStart, slideVertically)
+   *
+   *
    */
   on_combine(callback) {
     this.callbacks.on_combine = callback;
@@ -310,11 +364,8 @@ export class Engine {
   /** on_place(callback)
    *  Provides a hook to execute callbacks on placing numbers.
    *
-   *  callback(numberInfo)
-   *    numberInfo = {
-   *      value,
-   *      position = { column, row }
-   *    }
+   *  callback(numberPlaced)
+   *    numberPlaced: numberInfo of the number that was just placed on the board
    */
   on_place(callback) {
     this.callbacks.on_place = callback;

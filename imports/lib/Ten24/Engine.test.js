@@ -240,18 +240,56 @@ export const UnitTests = function() {
         engine = new Engine(boardsize, 0)
       });
 
-      it.skip("calls on_slide", function() {
-        let executed = false;
-        let f = () => executed = true;
-        engine.on_slide(f);
-        assert.isTrue(executed, "did not execute callback");
+      it("calls on_slide", function() {
+        let executed = 0;
+        let args;
+        let f = (numberToSlide, slideInfo) => {
+          executed++;
+          args = { numberToSlide, slideInfo };
+        };
+
+        engine.board[1][1] = 333;
+        engine.update_game_state();
+        engine.on_slide(f)
+        engine.slide_numbers_raw(true, false); //slide right
+
+        assert.equal(executed, 1, "did not execute callback");
+        assert.equal(args.numberToSlide?.value, 333, "Incorrect number value");
+        assert.equal(args.numberToSlide?.position?.row, 1, "Incorrect number row position");
+        assert.equal(args.numberToSlide?.position?.column, 1, "Incorrect number column position");
+        assert.equal(args.slideInfo?.from, 1, "Incorrect 'from' argument");
+        assert.equal(args.slideInfo?.to, 3, "Incorrect 'to' argument");
+        assert.equal(args.slideInfo?.slideAwayFromStart, true, "Incorrect 'slideAwayFromStart' argument");
+        assert.equal(args.slideInfo?.slideVertically, false, "Incorrect 'slideVertically' argument");
+
+        //check if combines are correctly generating slide events
+        executed = 0;
+        engine.board[1][1] = 333;
+        engine.update_game_state();
+        engine.slide_numbers_raw(false, false); //slide left
+        assert.equal(executed, 2, "did not execute all callbacks");
+        assert.equal(args.numberToSlide?.position?.row, 1, "Incorrect number row position");
+        assert.equal(args.numberToSlide?.position?.column, 3, "Incorrect number column position");
+        assert.equal(args.slideInfo?.to, 0, "Incorrect 'to' argument");
+        assert.equal(args.numberToSlide?.value, 333, "Incorrect number value");
       });
 
       it.skip("calls on_combine", function() {
         let executed = false;
-        let f = () => executed = true;
+        let f = () => {
+          executed = true;
+        };
+
         engine.on_combine(f);
+        engine.board[1][1] = 333;
+        engine.board[2][2] = 333;
+        engine.update_game_state();
+        engine.on_combine(f)
+        engine.slide_numbers_raw(true, false); //slide right
+        engine.slide_numbers_raw(true, true); //slide down and combine
+
         assert.isTrue(executed, "did not execute callback");
+        assert.isTrue(false, "gets correct parameters");
       });
 
       it("calls on_place", function() {
