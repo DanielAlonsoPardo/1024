@@ -10,6 +10,9 @@ import MersenneTwister from 'mersenne-twister'
  *   place_randomly(number) => boolean
  *   count_empty_cells() => int
  *   update_game_state()
+ *   on_slide(callback(number, slideDir))
+ *   on_combine(callback(number, number, slideDir))
+ *   on_place(callback(number))
  *   log_board()
  */
 
@@ -35,6 +38,10 @@ import MersenneTwister from 'mersenne-twister'
  *     zero_count -> number of empty cells, updated on slide and random placement.
  *     max_number -> highest number on the board. updated on slide and random placement.
  *     score -> current score. Increases every time two numbers combine, by the resulting number.
+ *   callbacks ->
+ *     on_slide   -> called whenever any number slides.
+ *     on_combine -> called whenever two numbers combine.
+ *     on_place   -> called whenever a new number is placed on the board.
  */
 export class Engine {
   /* Creates an empty board, ready to play */
@@ -48,6 +55,7 @@ export class Engine {
 
     this.seed = seed;
     this.rng = new MersenneTwister(seed);
+    this.callbacks = {};
 
     this.game_state = {
       move_count: 0,
@@ -218,16 +226,15 @@ export class Engine {
    *    returns: true if it was successfully placed, false otherwise.
    */
   place_randomly(number) {
-    if (number <= 0)
-      return true;
-    if (this.game_state.zero_count <= 0)
+    if (number <= 0 || this.game_state.zero_count <= 0)
       return false;
 
     let target_cell = Math.floor(this.game_state.zero_count * this.rng.random());
 
     let current_empty_cell = 0;
-    for (let row = 0; row < this.board.length || current_empty_cell <= target_cell; row++) {
-      for (let col = 0; col < this.board.length; col++) {
+    let row, col;
+    for (row = 0; row < this.board.length || current_empty_cell <= target_cell; row++) {
+      for (col = 0; col < this.board.length; col++) {
         if (this.board[row][col] == 0) {
           if (current_empty_cell == target_cell) {
             this.board[row][col] = number;
@@ -242,6 +249,15 @@ export class Engine {
 
     this.update_max_number(number)
     this.game_state.zero_count--;
+
+    this.callbacks?.on_place?.({
+      value: number,
+      position: {
+        column: col,
+        row: row
+      }
+    });
+
 
     return true;
   }
@@ -276,6 +292,34 @@ export class Engine {
     this.game_state.zero_count = count;
     this.game_state.max_number = max;
   }
+
+  /** on_slide
+   *  Provides a hook to execute callbacks on sliding numbers
+   */
+  on_slide(callback) {
+    this.callbacks.on_slide = callback;
+  }
+
+  /** on_combine
+   *  Provides a hook to execute callbacks on combining numbers
+   */
+  on_combine(callback) {
+    this.callbacks.on_combine = callback;
+  }
+
+  /** on_place(callback)
+   *  Provides a hook to execute callbacks on placing numbers.
+   *
+   *  callback(numberInfo)
+   *    numberInfo = {
+   *      value,
+   *      position = { column, row }
+   *    }
+   */
+  on_place(callback) {
+    this.callbacks.on_place = callback;
+  }
+
 
   log_board = () => {
     for (const l of this.board)

@@ -21,6 +21,15 @@ import './Ten24Board.css'
   }
 */
 
+/** translate_slideDir(slideDir) => direction
+  *  Converts a slideDir into a direction
+  *
+  *  slideDir = { slideAwayFromStart, slideVertically }
+  *  //see Ten24.Engine.slide_numbers_raw()
+  *
+  *  direction = <"up"|"down"|"left"|"right">
+  */
+
 //background layer helper
 let fillWithEmptyCells = () => {
   let divs = [];

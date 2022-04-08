@@ -34,8 +34,6 @@ export const UnitTests = function() {
         engine = new Engine(boardsize, 0);
       });
 
-
-
       it("slides to the right", function() {
         engine = new Engine(4, 0);
         engine.board[0] = [0, 4, 8, 4];
@@ -232,6 +230,54 @@ export const UnitTests = function() {
         }
         engine.game_state.zero_count = 0;
         assert.isFalse(engine.moves_available());
+      });
+    });
+
+    describe("hooks", function() {
+      let boardsize = 4;
+      let engine;
+      beforeEach(function() {
+        engine = new Engine(boardsize, 0)
+      });
+
+      it.skip("calls on_slide", function() {
+        let executed = false;
+        let f = () => executed = true;
+        engine.on_slide(f);
+        assert.isTrue(executed, "did not execute callback");
+      });
+
+      it.skip("calls on_combine", function() {
+        let executed = false;
+        let f = () => executed = true;
+        engine.on_combine(f);
+        assert.isTrue(executed, "did not execute callback");
+      });
+
+      it("calls on_place", function() {
+        let executed = false;
+        let f = params => { executed = true };
+        engine.on_place(f);
+        engine.place_2_4(f);
+        assert.isTrue(executed, "did not execute callback 1");
+
+        executed = false;
+        paramsExist = false;
+        paramsOK = false;
+        f = params => {
+          executed = true;
+          if (params)
+            paramsExist = true;
+          if (params?.value &&
+              params?.position?.column &&
+              params?.position?.row)
+            paramsOK = true;
+        };
+        engine.on_place(f);
+        engine.place_2_4(f);
+        assert.isTrue(executed, "did not execute callback 2");
+        assert.isTrue(paramsExist, "did not pass parameters to the callback");
+        assert.isTrue(paramsOK, "did not pass the correct parameters to the callback");
       });
     });
   });
