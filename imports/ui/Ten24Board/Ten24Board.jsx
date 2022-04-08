@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 
 import './Ten24Board.css'
-let makedivs = (amount, className) => {
+let fillBoardWithCells = (className) => {
   let divs = [];
-  for (let i = 0; i < amount; i++)
-    divs.push(<div className={className} key={i}></div>);
+  let id = 0;
+  for (let row = 0; row < 4; row++)
+    for (let col = 0; col < 4; col++)
+      divs.push(<div className={ `${className} ten24-col-${col} ten24-row-${row}` } key={id++}></div>);
   return divs;
 }
 
@@ -90,10 +92,10 @@ export const Ten24Board = () => {
       <button onClick={ e => { slideNumberFake() } }>slideNumberFake</button>
       <div className="ten24-board-background-layer">
       </div>
-      <div className="ten24-board-empty-cell-layer ten24-grid-layer">
-        { makedivs(4**2, "ten24-cell") }
+      <div className="ten24-board-empty-cell-layer ten24-board-layer">
+        { fillBoardWithCells("ten24-cell") }
       </div>
-      <div className="ten24-board-numbers-layer ten24-grid-layer">
+      <div className="ten24-board-numbers-layer ten24-board-layer">
         { numbersInPlay.map(renderNumber) }
       </div>
     </div>
