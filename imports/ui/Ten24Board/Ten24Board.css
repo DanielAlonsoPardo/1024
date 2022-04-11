@@ -79,110 +79,110 @@
   animation-timing-function: linear;
   animation-fill-mode: forwards;
 }
-.slide-left-1 {
-  animation-name: slide-left-1;
+.slide-from-left-1 {
+  animation-name: slide-from-left-1;
   animation-duration: calc(0.5s/3);
 }
-.slide-left-2 {
-  animation-name: slide-left-2;
+.slide-from-left-2 {
+  animation-name: slide-from-left-2;
   animation-duration: calc((0.5s/3)*2);
 }
-.slide-left-3 {
-  animation-name: slide-left-3;
+.slide-from-left-3 {
+  animation-name: slide-from-left-3;
   animation-duration: calc(0.5s/1);
 }
-.slide-right-1 {
-  animation-name: slide-right-1;
+.slide-from-right-1 {
+  animation-name: slide-from-right-1;
   animation-duration: calc(0.5s/3);
 }
-.slide-right-2 {
-  animation-name: slide-right-2;
+.slide-from-right-2 {
+  animation-name: slide-from-right-2;
   animation-duration: calc((0.5s/3)*2);
 }
-.slide-right-3 {
-  animation-name: slide-right-3;
+.slide-from-right-3 {
+  animation-name: slide-from-right-3;
   animation-duration: calc(0.5s/1);
 }
-.slide-up-1 {
-  animation-name: slide-up-1;
+.slide-from-up-1 {
+  animation-name: slide-from-up-1;
   animation-duration: calc(0.5s/3);
 }
-.slide-up-2 {
-  animation-name: slide-up-2;
+.slide-from-up-2 {
+  animation-name: slide-from-up-2;
   animation-duration: calc((0.5s/3)*2);
 }
-.slide-up-3 {
-  animation-name: slide-up-3;
+.slide-from-up-3 {
+  animation-name: slide-from-up-3;
   animation-duration: calc(0.5s/1);
 }
-.slide-down-1 {
-  animation-name: slide-down-1;
+.slide-from-down-1 {
+  animation-name: slide-from-down-1;
   animation-duration: calc(0.5s/3);
 }
-.slide-down-2 {
-  animation-name: slide-down-2;
+.slide-from-down-2 {
+  animation-name: slide-from-down-2;
   animation-duration: calc((0.5s/3)*2);
 }
-.slide-down-3 {
-  animation-name: slide-down-3;
+.slide-from-down-3 {
+  animation-name: slide-from-down-3;
   animation-duration: calc(0.5s/1);
 }
-@keyframes slide-left-1 {
+@keyframes slide-from-left-1 {
   to {
     transform: translate(calc(-120px * 1), 0);
   }
 }
-@keyframes slide-left-2 {
+@keyframes slide-from-left-2 {
   to {
     transform: translate(calc(-120px * 2), 0);
   }
 }
-@keyframes slide-left-3 {
+@keyframes slide-from-left-3 {
   to {
     transform: translate(calc(-120px * 3), 0);
   }
 }
-@keyframes slide-right-1 {
+@keyframes slide-from-right-1 {
   to {
     transform: translate(calc(120px * 1), 0);
   }
 }
-@keyframes slide-right-2 {
+@keyframes slide-from-right-2 {
   to {
     transform: translate(calc(120px * 2), 0);
   }
 }
-@keyframes slide-right-3 {
+@keyframes slide-from-right-3 {
   to {
     transform: translate(calc(120px * 3), 0);
   }
 }
-@keyframes slide-up-1 {
+@keyframes slide-from-up-1 {
   to {
     transform: translate(0, calc(-120px * 1));
   }
 }
-@keyframes slide-up-2 {
+@keyframes slide-from-up-2 {
   to {
     transform: translate(0, calc(-120px * 2));
   }
 }
-@keyframes slide-up-3 {
+@keyframes slide-from-up-3 {
   to {
     transform: translate(0, calc(-120px * 3));
   }
 }
-@keyframes slide-down-1 {
+@keyframes slide-from-down-1 {
   to {
     transform: translate(0, calc(120px * 1));
   }
 }
-@keyframes slide-down-2 {
+@keyframes slide-from-down-2 {
   to {
     transform: translate(0, calc(120px * 2));
   }
 }
-@keyframes slide-down-3 {
+@keyframes slide-from-down-3 {
   to {
     transform: translate(0, calc(120px * 3));
   }

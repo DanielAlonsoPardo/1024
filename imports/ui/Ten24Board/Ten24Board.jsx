@@ -15,7 +15,10 @@ import './Ten24Board.css'
     position: {
       row,
       column },
+    combined, //0, if the cell was not created from being combined
+             //equals to the distance of the farthest number being combined 
     slide: { //optional, if the cell should be shown as sliding
+             //to be interpreted as "where this tile slid from to end up where it is"
       direction, //<"up"|"down"|"left"|"right">
       distance   //1-3 },
   }
@@ -49,7 +52,7 @@ let renderNumber = (number) => {
   classNames = "ten24-cell "
   + `ten24-row-${number.position.row} `
   + `ten24-col-${number.position.column} `
-  + (number.slide ? `slide-${number.slide.direction}-${number.slide.distance} sliding` : "");
+  + (number.slide ? `slide-from-${number.slide.direction}-${number.slide.distance} sliding` : "");
   return (<div className={ classNames } key={ number.id }> </div>);
 }
 
@@ -78,6 +81,7 @@ export const Ten24Board = () => {
         row,
         column
       },
+      combined: 0,
       slide: null,
       value,
       id: nID
