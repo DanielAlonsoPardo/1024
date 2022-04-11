@@ -128,6 +128,10 @@ export class Engine {
    *   Up: slide_numbers_raw(false, true)
    *   Down: slide_numbers_raw(true, true)
    */
+  set_cell_vertical = (col, cell, value) => this.board[cell][col] = value;
+  get_cell_vertical = (col, cell) => this.board[cell][col];
+  set_cell_horizontal = (row, cell, value) => this.board[row][cell] = value;
+  get_cell_horizontal = (row, cell) => this.board[row][cell];
   slide_numbers_raw(slideAwayFromStart, slideVertically) {
     //these functions are essentially used to iterate through board cells
     //they change depending on what side you're sliding towards
@@ -366,11 +370,6 @@ export class Engine {
   on_place(callback) {
     this.callbacks.on_place = callback;
   }
-
-  set_cell_vertical = (col, cell, value) => this.board[cell][col] = value
-  get_cell_vertical = (col, cell) => this.board[cell][col]
-  set_cell_horizontal = (row, cell, value) => this.board[row][cell] = value
-  get_cell_horizontal = (row, cell) => this.board[row][cell]
 
   log_board = () => {
     for (const l of this.board)

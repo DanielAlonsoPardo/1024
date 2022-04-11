@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import './Ten24Board.css'
+import './Ten24Board.scss'
 
 
 /** Ten24Board
@@ -61,6 +61,8 @@ export const Ten24Board = () => {
   const [tempNumbers, setTempNumbers] = useState([]);
   const [nID, setID] = useState(0);
   let ID = nID;
+  let _numbersInPlay = numbersInPlay;
+  let _tempNumbers = tempNumbers;
   const [counter, setCounter] = useState(0);
 
   let placeNumberFake = () => {
@@ -99,8 +101,8 @@ export const Ten24Board = () => {
       id: ID
     }
 
-//    setNumbersInPlay([...numbersInPlay, number]);
-    numbersInPlay.push(number);//needs a re-render
+    _numbersInPlay.push(number);
+    setNumbersInPlay(_numbersInPlay);
     setID(++ID);
   }
 
@@ -112,13 +114,13 @@ export const Ten24Board = () => {
     let numberFrom = (n) => (n.position.column == from.column &&
                              n.position.row == from.row &&
                              n.slide == null)
-    let n = numbersInPlay.find(numberFrom);
+    let n = _numbersInPlay.find(numberFrom);
     if (!n) return;
 
     n.position = to;
     n.slide = { ...travel };
 
-    //setNumbersInPlay([...numbersInPlay]);//if this line is commented you need to force re-render
+    setNumbersInPlay(_numbersInPlay);//re-render needed since the change might not be detected
     setID(++ID);//only used to force a re-render.
   }
 
@@ -127,21 +129,27 @@ export const Ten24Board = () => {
     let overwritable = (number) => (number.position.row == pos.row &&
                                     number.position.column == pos.column)
     //move old to temp numbers array
-    setNumbersInPlay(numbersInPlay.filter(n => !overwritable(n)));
-    let to_combine = numbersInPlay.filter(overwritable);
-    setTempNumbers(tempNumbers.concat(to_combine));
+    let numbersLeft = _numbersInPlay.filter(n => !overwritable(n));
+    let to_combine = _numbersInPlay.filter(overwritable);
+    _tempNumbers = _tempNumbers.concat(to_combine)
+    setTempNumbers(_tempNumbers);
+    _numbersInPlay = numbersLeft;
+    setNumbersInPlay(_numbersInPlay);
 
     //add new
     let combined = Math.max(...(to_combine.map(n => n.slide?.distance)));
     placeNumber(pos.row, pos.column, value, combined || 0);
   }
   return (
-<div>
     <div className="ten24-board">
       <button onClick={ e => { placeNumberFake() } }>placeNumberFake</button>
       <button onClick={ e => { slideNumberFake() } }>slideNumberFake</button>
       <button onClick={ e => { placeNumberFake2() } }>place combine</button>
       <button onClick={ e => { combineNumbersFake() } }>test combine</button>
+      <button onClick={ e => { console.log("numbersInPlay:");
+                               numbersInPlay.map(n => console.log(n));
+                               console.log("tempNumbers:");
+                               tempNumbers.map(n=> console.log(n)); } }>console log</button>
 
       <div className="ten24-board-background-layer">
       </div>
@@ -149,12 +157,9 @@ export const Ten24Board = () => {
         { fillWithEmptyCells() }
       </div>
       <div className="ten24-board-numbers-layer ten24-board-layer">
-        { numbersInPlay.map(renderNumber) }
-        { tempNumbers.map(renderNumber) }
+        { numbersInPlay.map(n => renderNumber(n)) }
+        { tempNumbers.map(n => renderNumber(n)) }
       </div>
     </div>
-<p>{JSON.stringify(numbersInPlay)}</p>
-<p>{JSON.stringify(tempNumbers)}</p>
-</div>
   )
 }

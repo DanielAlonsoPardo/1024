@@ -1,0 +1,241 @@
+/* assumes a 4x4 board */
+
+/* sizes */
+$board-length: 500px;
+$cell-length: $board-length / 5;
+$cell-gap: $board-length / 5 / 5;
+
+/* animation timing */
+$base-sliding-duration: 500ms;
+$base-combining-duration: 200ms;
+$base-animation-duration: $base-sliding-duration + $base-combining-duration;
+
+$slide-1-duration: $base-sliding-duration * 1 / 3;
+$slide-2-duration: $base-sliding-duration * 2 / 3;
+$slide-3-duration: $base-sliding-duration * 3 / 3;
+
+.ten24-board {
+  height: $board-length;
+  width: $board-length;
+}
+
+/* old gridlayer using grid (doesn't animate very well)
+.ten24-grid-layer {
+  height: 92%;
+  width: 92%;
+  margin: 4%;
+  position: absolute;
+
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-template-rows: auto auto auto auto;
+  gap: 4.347826%;
+}
+*/
+
+.ten24-board-layer {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+
+.ten24-board-background-layer {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  border-radius: 1rem;
+  background: chocolate;
+}
+
+.ten24-cell {
+  position: absolute;
+  width: $cell-length;
+  height: $cell-length;
+  border-radius: 1rem;
+}
+
+.ten24-board-empty-cell-layer {}
+.ten24-board-empty-cell-layer > .ten24-cell {
+  background: bisque;
+}
+
+.ten24-board-numbers-layer {}
+.ten24-board-numbers-layer > .ten24-cell {
+  background: grey;
+}
+
+.ten24-col-0 {
+  left: $cell-length * 0 + $cell-gap * 0 + $cell-gap;
+}
+.ten24-col-1 {
+  left: $cell-length * 1 + $cell-gap * 1 + $cell-gap;
+}
+.ten24-col-2 {
+  left: $cell-length * 2 + $cell-gap * 2 + $cell-gap;
+}
+.ten24-col-3 {
+  left: $cell-length * 3 + $cell-gap * 3 + $cell-gap;
+}
+
+.ten24-row-0 {
+  top: $cell-length * 0 + $cell-gap * 0 + $cell-gap;
+}
+.ten24-row-1 {
+  top: $cell-length * 1 + $cell-gap * 1 + $cell-gap;
+}
+.ten24-row-2 {
+  top: $cell-length * 2 + $cell-gap * 2 + $cell-gap;
+}
+.ten24-row-3 {
+  top: $cell-length * 3 + $cell-gap * 3 + $cell-gap;
+}
+
+.sliding {
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+.slide-from-left-1 {
+  animation-name: slide-from-left-1;
+  animation-duration: $slide-1-duration;
+}
+.slide-from-left-2 {
+  animation-name: slide-from-left-2;
+  animation-duration: $slide-2-duration;
+}
+.slide-from-left-3 {
+  animation-name: slide-from-left-3;
+  animation-duration: $slide-3-duration;
+}
+.slide-from-right-1 {
+  animation-name: slide-from-right-1;
+  animation-duration: $slide-1-duration;
+}
+.slide-from-right-2 {
+  animation-name: slide-from-right-2;
+  animation-duration: $slide-2-duration;
+}
+.slide-from-right-3 {
+  animation-name: slide-from-right-3;
+  animation-duration: $slide-3-duration;
+}
+.slide-from-up-1 {
+  animation-name: slide-from-up-1;
+  animation-duration: $slide-1-duration;
+}
+.slide-from-up-2 {
+  animation-name: slide-from-up-2;
+  animation-duration: $slide-2-duration;
+}
+.slide-from-up-3 {
+  animation-name: slide-from-up-3;
+  animation-duration: $slide-3-duration;
+}
+.slide-from-down-1 {
+  animation-name: slide-from-down-1;
+  animation-duration: $slide-1-duration;
+}
+.slide-from-down-2 {
+  animation-name: slide-from-down-2;
+  animation-duration: $slide-2-duration;
+}
+.slide-from-down-3 {
+  animation-name: slide-from-down-3;
+  animation-duration: $slide-3-duration;
+}
+@keyframes slide-from-left-1 {
+  from {
+    transform: translate($cell-length + $cell-gap * 1, 0);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-left-2 {
+  from {
+    transform: translate($cell-length + $cell-gap * 2, 0);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-left-3 {
+  from {
+    transform: translate($cell-length + $cell-gap * 3, 0);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-right-1 {
+  from {
+    transform: translate(-($cell-length + $cell-gap) * 1, 0);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-right-2 {
+  from {
+    transform: translate(-($cell-length + $cell-gap) * 2, 0);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-right-3 {
+  from {
+    transform: translate(-($cell-length + $cell-gap) * 3, 0);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-up-1 {
+  from {
+    transform: translate(0, $cell-length + $cell-gap * 1);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-up-2 {
+  from {
+    transform: translate(0, $cell-length + $cell-gap * 2);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-up-3 {
+  from {
+    transform: translate(0, $cell-length + $cell-gap * 3);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-down-1 {
+  from {
+    transform: translate(0, -($cell-length + $cell-gap) * 1);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-down-2 {
+  from {
+    transform: translate(0, -($cell-length + $cell-gap) * 2);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
+@keyframes slide-from-down-3 {
+  from {
+    transform: translate(0, -($cell-length + $cell-gap) * 3);
+  }
+  to {
+    transform: translate(0, 0);
+  }
+}
