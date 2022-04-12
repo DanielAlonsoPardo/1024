@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Ten24 from '/imports/lib/Ten24';
-
-import './Ten24Board.scss'
 
 /** Ten24Board
  *
@@ -55,13 +53,12 @@ class Ten24Board extends React.Component {
 
   constructor(props) {
     super(props);
-    this.game = new Ten24.Game(this.props.seed);
-    //setup hooks
-    this.foobar = "foobar";
-    this.game.engine.on_slide(this.callback_on_slide.bind(this));
-    this.game.engine.on_combine(this.callback_on_combine.bind(this));
-    this.game.engine.on_place(this.callback_on_place.bind(this));
-    //on
+    let callbacks = {
+      on_slide: this.callback_on_slide.bind(this),
+      on_combine: this.callback_on_combine.bind(this),
+      on_place: this.callback_on_place.bind(this)
+    };
+    this.game = new Ten24.Game(this.props.seed, callbacks);
   }
 
   callback_on_slide() {
@@ -192,9 +189,5 @@ class Ten24Board extends React.Component {
   *
   *  direction = <"up"|"down"|"left"|"right">
   */
-
-
-
-
 
 export { Ten24Board };

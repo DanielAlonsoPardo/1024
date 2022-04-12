@@ -1,6 +1,6 @@
-import { Engine } from './Engine.js'
-import { Game } from './Game.js'
-import { Game_replay } from './Game_replay.js'
+export { Engine } from './Engine.js'
+export { Game } from './Game.js'
+export { Game_replay } from './Game_replay.js'
 
 /** Ten24
  *
@@ -12,10 +12,3 @@ import { Game_replay } from './Game_replay.js'
  *    - and...
  *           ...rng
  */
-
-
-export {
-  Engine,
-  Game_replay,
-  Game
-};

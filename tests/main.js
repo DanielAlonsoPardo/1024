@@ -1,11 +1,12 @@
 import assert from 'assert';
 
 import { UnitTests as Ten24_test } from '/imports/lib/Ten24/Ten24.test.js';
+import { UnitTests as Ten24Board_test } from '/imports/ui/Ten24Board/Ten24Board.test.jsx';
 
 
 let UnitTests = {
   Ten24_test,
-  
+  Ten24Board_test
 }
 
 describe("Sanity check", function () {

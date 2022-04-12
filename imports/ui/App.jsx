@@ -3,7 +3,10 @@ import { useTracker }      from 'meteor/react-meteor-data';
 import { Meteor }          from 'meteor/meteor';
 
 import { UserAccountBar } from '/imports/ui/UserAccountBar';
-import { Ten24Board } from '/imports/ui/Ten24Board/Ten24Board.jsx';
+import { Ten24Board } from '/imports/ui/Ten24Board';
+
+//Object.keys(foo).forEach(prop => console.log(prop));
+//console.log("_____________________________________")
 
 import '/imports/ui/App.css';
 

@@ -51,19 +51,27 @@ export class Engine {
    *   `seed` should be a 32-bit unsigned int, and it gets converted to one
    *     if it is not (by `MersenneTwister`'s constructor) 
    *
+   *     callbacks = {
+   *       on_slide
+   *       on_combine
+   *       on_place
+   *     }
    */
-
-  /* this.board[row][col] */
-  constructor(boardsize, seed) {
+  constructor(boardsize, seed, callbacks) {
     if (boardsize < 1 || boardsize > 16)
       throw "Boards of size " + boardsize + "are not permitted";
+    //this.board[row][col]
     this.board = Array(boardsize);
     for (let i = 0; i < boardsize; i++)
       this.board[i] = Array(boardsize).fill(0);
 
+    this.callbacks = {};
+    this.callbacks.on_slide = callbacks?.on_slide;
+    this.callbacks.on_combine = callbacks?.on_combine;
+    this.callbacks.on_place = callbacks?.on_place;
+
     this.rng = new MersenneTwister(seed);
     this.seed = this.rng.mt[0];//Make sure we got the same seed used by MersenneTwister
-    this.callbacks = {};
 
     this.game_state = {
       move_count: 0,

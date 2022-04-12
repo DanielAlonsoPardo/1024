@@ -17,15 +17,22 @@ export class Game {
     Left: 'l',
     Right: 'r'
   };
-  //if no seed is passed, a random one is generated.
-  constructor(seed) {
+  /**
+   *     seed -> optional. converted to 32 bit unsigned by Engine.
+   *     callbacks = {
+   *       on_slide
+   *       on_combine
+   *       on_place
+   *     }
+   */
+  //
+  constructor(seed, callbacks) {
+    this.callbacks = callbacks;
     this.restart(seed);
   }
-
   restart(seed) {
-
     this.game_record = [];
-    this.engine = new Engine(Game.Default_boardsize, seed);
+    this.engine = new Engine(Game.Default_boardsize, seed, this.callbacks);
     //gotta put something on the board so the game can start
     this.engine.place_2_4();
   }
