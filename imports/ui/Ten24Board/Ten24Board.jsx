@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import Ten24 from '/imports/lib/Ten24';
+
 import './Ten24Board.scss'
 
 /** Ten24Board
@@ -41,24 +43,43 @@ class Ten24Board extends React.Component {
 
   //----** Instance **----//
 
-  //Numbers in play on the board
-  numbersInPlay = [];
-  //Numbers that must be shown for rendering purposes, but are not actually in play.
-  //  Should be emptied on every turn start.
-  tempNumbers = [];
-  ID = 0;// used for React `key` attr.
+  numbersInPlay = [];//Array of `number`s that are currently in play, to be rendered.
+  tempNumbers = [];//Array of `number`s that exist only for rendering purposes. Periodically emptied.
+  ID = 0;// used to generate React `key` attributes, or to force rendering.
   state = {
     numbersInPlay: this.numbersInPlay,
     tempNumbers: this.tempNumbers,
     ID: this.ID
   };
+  game = null;
 
   constructor(props) {
     super(props);
+    this.game = new Ten24.Game(this.props.seed);
+    //setup hooks
+    this.foobar = "foobar";
+    this.game.engine.on_slide(this.callback_on_slide.bind(this));
+    this.game.engine.on_combine(this.callback_on_combine.bind(this));
+    this.game.engine.on_place(this.callback_on_place.bind(this));
+    //on
   }
+
+  callback_on_slide() {
+    console.log("callback_on_slide");
+  }
+
+  callback_on_combine() {
+    console.log("callback_on_combine");
+  }
+
+  callback_on_place() {
+    console.log("callback_on_place");
+  }
+
 
   /**
    * Creates a new number tile to be displayed on the board
+   *
    */
   placeNumber(row, column, value, combined) {
     let number = {
@@ -128,30 +149,6 @@ class Ten24Board extends React.Component {
   }
 
   render() {
-    let placeNumberFake = () => {
-      this.placeNumber(0, 0, 2);
-      this.placeNumber(1, 1, 2);
-      this.placeNumber(2, 2, 2);
-      this.placeNumber(3, 3, 2);
-    }
-  
-    let placeNumberFake2 = () => {
-      this.placeNumber(3, 0, 2);
-      this.placeNumber(3, 0, 2);
-      this.placeNumber(3, 0, 2);
-    }
-    let combineNumbersFake = () => {
-      this.combineNumbers({row: 3, column: 0}, 33);
-    }
-  
-    let slideNumberFake = () => {
-      let pos = (row, col) => ({ row: row, column: col })
-      let to = (dist, dir) => ({ distance: dist, direction: dir })
-      this.slideNumber(pos(0, 0), pos(0, 3), to(3, "right"));
-      this.slideNumber(pos(1, 1), pos(1, 3), to(2, "right"));
-      this.slideNumber(pos(2, 2), pos(2, 3), to(1, "right"));
-    }
-
     let fillWithEmptyCells = () => {
       let divs = [];
       let id = 0;
@@ -163,14 +160,15 @@ class Ten24Board extends React.Component {
 
     return (
       <div className="ten24-board">
-        <button onClick={ e => { placeNumberFake() } }>placeNumberFake</button>
-        <button onClick={ e => { slideNumberFake() } }>slideNumberFake</button>
-        <button onClick={ e => { placeNumberFake2() } }>place combine</button>
-        <button onClick={ e => { combineNumbersFake() } }>test combine</button>
+        <button onClick={ e => {  } }>up</button>
+        <button onClick={ e => {  } }>down</button>
+        <button onClick={ e => {  } }>left</button>
+        <button onClick={ e => {  } }>right</button>
         <button onClick={ e => { console.log("numbersInPlay:");
                                  this.state.numbersInPlay.map(n => console.log(n));
                                  console.log("tempNumbers:");
-                                 this.state.tempNumbers.map(n=> console.log(n)); } }>console log</button>
+                                 this.state.tempNumbers.map(n=> console.log(n)); } }>
+          console log </button>
   
         <div className="ten24-board-background-layer">
         </div>
@@ -178,8 +176,8 @@ class Ten24Board extends React.Component {
           { fillWithEmptyCells() }
         </div>
         <div className="ten24-board-numbers-layer ten24-board-layer">
-          { this.state.numbersInPlay.map(n => renderNumber(n)) }
-          { this.state.tempNumbers.map(n => renderNumber(n)) }
+          { this.state.numbersInPlay.map(n => Ten24Board.renderNumber(n)) }
+          { this.state.tempNumbers.map(n => Ten24Board.renderNumber(n)) }
         </div>
       </div>
     )

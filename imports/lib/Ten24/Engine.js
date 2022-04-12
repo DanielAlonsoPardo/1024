@@ -44,7 +44,15 @@ import MersenneTwister from 'mersenne-twister'
  *     on_place   -> called whenever a new number is placed on the board.
  */
 export class Engine {
-  /* Creates an empty board, ready to play */
+  /**
+   *
+   * Creates an empty board, ready to play
+   *
+   *   `seed` should be a 32-bit unsigned int, and it gets converted to one
+   *     if it is not (by `MersenneTwister`'s constructor) 
+   *
+   */
+
   /* this.board[row][col] */
   constructor(boardsize, seed) {
     if (boardsize < 1 || boardsize > 16)
@@ -53,8 +61,8 @@ export class Engine {
     for (let i = 0; i < boardsize; i++)
       this.board[i] = Array(boardsize).fill(0);
 
-    this.seed = seed;
     this.rng = new MersenneTwister(seed);
+    this.seed = this.rng.mt[0];//Make sure we got the same seed used by MersenneTwister
     this.callbacks = {};
 
     this.game_state = {

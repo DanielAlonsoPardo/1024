@@ -17,7 +17,7 @@ export class Game {
     Left: 'l',
     Right: 'r'
   };
-
+  //if no seed is passed, a random one is generated.
   constructor(seed) {
     this.restart(seed);
   }
