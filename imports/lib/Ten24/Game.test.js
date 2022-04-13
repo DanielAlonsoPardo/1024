@@ -8,8 +8,8 @@ export const UnitTests = function() {
     beforeEach(function() {
       game = new Game(0);
     });
-    it("game does not start with an empty board", function() {
-      assert.isBelow(game.engine.count_empty_cells(), 16, "every cell is empty");
+    it("game starts with an empty board", function() {
+      assert.equal(game.engine.count_empty_cells(), 16, "not every cell is empty");
     });
     it("records games correctly", function() {
       try {

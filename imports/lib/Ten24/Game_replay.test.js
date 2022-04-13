@@ -10,6 +10,7 @@ export const UnitTests = function() {
     let replay;
     beforeEach(function() {
       game = new Game(Math.random());
+      game.start();
       while(!game.ended()) {
         game.move_up();
         game.move_down();

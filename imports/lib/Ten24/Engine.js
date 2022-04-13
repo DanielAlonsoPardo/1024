@@ -250,14 +250,13 @@ export class Engine {
     this.update_max_number(number)
     this.game_state.zero_count--;
 
-    this.callbacks?.on_place?.({
+    this.place_callback({
       value: number,
       position: {
         column: col,
         row: row
       }
     });
-
 
     return true;
   }
@@ -314,37 +313,42 @@ export class Engine {
    */
 
   /** on_slide
-   *  Provides a hook to execute callbacks before sliding numbers.
+   *  Provides a hook to execute callbacks BEFORE sliding numbers.
    *  Combining numbers implies at least one on_slide event.
    *
-   *  callback(numberToSlide, slideInfo)
-   *    numberToSlide -> numberInfo of the number (before moving)
+   *  callback(fromInfo, toInfo, slideInfo)
+   *    fromInfo -> numberInfo of the number (before sliding)
+   *    toInfo -> numberInfo of the number that will get overwritten after the slide
    *    slideInfo -> type of slide to be performed
    */
   on_slide(callback) {
     this.callbacks.on_slide = callback;
   }
-
   slide_callback(row, from, to, slideAwayFromStart, slideVertically) {
     if (!this.callbacks?.on_slide)
       return;
-
     let get_cell = (slideVertically ? this.get_cell_vertical : this.get_cell_horizontal);
-    let get_row = (slideAwayFromStart ? (row, col) => col : (row, col) => row);
-    let get_col = (slideAwayFromStart ? (row, col) => row : (row, col) => col);
+    let get_row = (slideVertically ? (row, col) => col : (row, col) => row);
+    let get_col = (slideVertically ? (row, col) => row : (row, col) => col);
 
-    let numberInfo = {
+    let fromInfo = {
       value: get_cell(row, from),
       position: {
         row: get_row(row, from),
         column: get_col(row, from)
       }
     }
+    let toInfo = {
+      value: get_cell(row, to),
+      position: {
+        row: get_row(row, to),
+        column: get_col(row, to)
+      }
+    }
     let slideInfo = {
       from, to, slideAwayFromStart, slideVertically
     }
-
-    this.callbacks.on_slide(numberInfo, slideInfo);
+    this.callbacks.on_slide(fromInfo, toInfo, slideInfo);
   }
 
   /** on_combine
@@ -385,6 +389,10 @@ export class Engine {
    */
   on_place(callback) {
     this.callbacks.on_place = callback;
+  }
+
+  place_callback(numberPlaced) {
+    this.callbacks.on_place?.(numberPlaced);
   }
 
   log_board = () => {

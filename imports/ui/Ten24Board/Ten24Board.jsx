@@ -58,21 +58,40 @@ class Ten24Board extends React.Component {
       on_combine: this.callback_on_combine.bind(this),
       on_place: this.callback_on_place.bind(this)
     };
-    this.game = new Ten24.Game(this.props.seed, callbacks);
+    this.game = new Ten24.Game(this.props?.seed, callbacks);
   }
 
-  callback_on_slide() {
-    console.log("callback_on_slide");
+  /*  callback_on_slide(fromInfo, toInfo, slideInfo)
+   *    fromInfo -> numberInfo of the number (before sliding)
+   *    toInfo -> numberInfo of the number that will get overwritten after the slide
+   *    slideInfo -> type of slide to be performed
+   */
+  callback_on_slide(fromInfo, toInfo, slideInfo) {
+    let from, to, travel;
+    from = { ...fromInfo.position };
+    to = { ...toInfo.position }
+    travel = {
+      distance: Math.abs(slideInfo.to - slideInfo.from),
+      direction: Ten24.Game.translate_slideInfo(slideInfo)
+    }
+    this.slideNumber(from, to, travel);
   }
 
   callback_on_combine() {
     console.log("callback_on_combine");
   }
 
-  callback_on_place() {
-    console.log("callback_on_place");
+  /**
+   *  Add a number to numbersInPlay
+   *  numberInfo -> Describes a given number on the board (see Engine `numberInfo`)
+   *  numberInfo = {
+   *      value,
+   *      position: { column, row }
+   *    }
+   */
+  callback_on_place(numberInfo) {
+    this.placeNumber(numberInfo.position.row, numberInfo.position.column, numberInfo.value);
   }
-
 
   /**
    * Creates a new number tile to be displayed on the board
@@ -105,8 +124,7 @@ class Ten24Board extends React.Component {
    */
    slideNumber(from, to, travel) {
     let numberFrom = (n) => (n.position.column == from.column &&
-                             n.position.row == from.row &&
-                             n.slide == null)
+                             n.position.row == from.row)
     let n = this.numbersInPlay.find(numberFrom);
     if (!n) return;
 
@@ -180,14 +198,5 @@ class Ten24Board extends React.Component {
     )
   }
 }
-
-/** translate_slideDir(slideDir) => direction
-  *  Converts a slideDir into a direction
-  *
-  *  slideDir = { slideAwayFromStart, slideVertically }
-  *  //see Ten24.Engine.slide_numbers_raw()
-  *
-  *  direction = <"up"|"down"|"left"|"right">
-  */
 
 export { Ten24Board };

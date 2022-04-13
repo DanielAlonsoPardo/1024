@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+import { default as chai, assert } from 'chai';
 
 import { Engine } from './Engine.js'
 
@@ -243,35 +243,55 @@ export const UnitTests = function() {
       it("calls on_slide", function() {
         let executed = 0;
         let args;
-        let f = (numberToSlide, slideInfo) => {
+        let f = (fromInfo, toInfo, slideInfo) => {
           executed++;
-          args = { numberToSlide, slideInfo };
+          args = { fromInfo, toInfo, slideInfo };
         };
 
         engine.board[1][1] = 333;
         engine.update_game_state();
         engine.on_slide(f)
         engine.slide_numbers_raw(true, false); //slide right
+        let expected_args = {
+          fromInfo: {
+            value: 333,
+            position: {
+              row: 1,
+              column: 1 } },
+          toInfo: {
+            value: 0,
+            position: {
+              row: 1,
+              column: 3 } },
+          slideInfo: {
+            from: 1,
+            to: 3,
+            slideAwayFromStart: true,
+            slideVertically: false } }
 
         assert.equal(executed, 1, "did not execute callback");
-        assert.equal(args.numberToSlide?.value, 333, "Incorrect number value");
-        assert.equal(args.numberToSlide?.position?.row, 1, "Incorrect number row position");
-        assert.equal(args.numberToSlide?.position?.column, 1, "Incorrect number column position");
-        assert.equal(args.slideInfo?.from, 1, "Incorrect 'from' argument");
-        assert.equal(args.slideInfo?.to, 3, "Incorrect 'to' argument");
-        assert.equal(args.slideInfo?.slideAwayFromStart, true, "Incorrect 'slideAwayFromStart' argument");
-        assert.equal(args.slideInfo?.slideVertically, false, "Incorrect 'slideVertically' argument");
+        assert.deepEqual(args, expected_args, "Incorrect arguments passed to on_slide callback when sliding right");
 
         //check if combines are correctly generating slide events
         executed = 0;
-        engine.board[1][1] = 333;
-        engine.update_game_state();
         engine.slide_numbers_raw(false, false); //slide left
-        assert.equal(executed, 2, "did not execute all callbacks");
-        assert.equal(args.numberToSlide?.position?.row, 1, "Incorrect number row position");
-        assert.equal(args.numberToSlide?.position?.column, 3, "Incorrect number column position");
-        assert.equal(args.numberToSlide?.value, 333, "Incorrect number value");
-        assert.equal(args.slideInfo?.to, 0, "Incorrect 'to' argument");
+        expected_args.fromInfo = expected_args.toInfo;
+        expected_args.fromInfo.value = 333;
+        expected_args.toInfo = { value: 0, position: { row: 1, column: 0 } };
+        expected_args.slideInfo = { from: 3, to: 0, slideAwayFromStart: false, slideVertically: false };
+
+        assert.equal(executed, 1, "did not execute all callbacks");
+        assert.deepEqual(args, expected_args, "Incorrect arguments passed to on_slide callback when sliding left");
+
+        executed = 0;
+        engine.slide_numbers_raw(true, true); //slide down
+        expected_args.fromInfo = expected_args.toInfo;
+        expected_args.fromInfo.value = 333;
+        expected_args.toInfo = { value: 0, position: { row: 3, column: 0 } };
+        expected_args.slideInfo = { from: 1, to: 3, slideAwayFromStart: true, slideVertically: true };
+
+        assert.equal(executed, 1, "did not execute all callbacks");
+        assert.deepEqual(args, expected_args, "Incorrect arguments passed to on_slide callback when sliding left");
       });
 
       it("calls on_combine", function() {

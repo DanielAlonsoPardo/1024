@@ -36,6 +36,7 @@ export class Game_replay {
    * See Iteration protocols for ECMAscript 2015
    */
   [Symbol.iterator]() {
+    this.game.start();
     return this;
   }
   /** next
@@ -47,7 +48,7 @@ export class Game_replay {
    *            to be used by the @@iterator
    */
   next() {
-    if (this.done())
+    if (this.done() || !this.game.started)
       return { done: true };
 
     let move = this.recorded_game.input[this.movement_counter];

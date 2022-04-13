@@ -17,6 +17,26 @@ export class Game {
     Left: 'l',
     Right: 'r'
   };
+
+  /** translate_slideInfo(slideInfo) => Move_code
+   *  Converts a slideDir into more easily usable numberInfos and direction code
+   *
+   *    slideInfo -> See `slideInfo` in Engine.js
+   *
+   *    Returns:
+   *      A `Ten24.Game.Move_code` direction
+  **/
+  static translate_slideInfo(slideInfo) {
+    if (slideInfo.slideAwayFromStart && slideInfo.slideVertically)
+      return Game.Move_code.Down;
+    else if (slideInfo.slideAwayFromStart && !slideInfo.slideVertically)
+      return Game.Move_code.Right;
+    else if (!slideInfo.slideAwayFromStart && slideInfo.slideVertically)
+      return Game.Move_code.Up;
+    else if (!slideInfo.slideAwayFromStart && !slideInfo.slideVertically)
+      return Game.Move_code.Left;
+  }
+
   /**
    *     seed -> optional. converted to 32 bit unsigned by Engine.
    *     callbacks = {
@@ -33,8 +53,15 @@ export class Game {
   restart(seed) {
     this.game_record = [];
     this.engine = new Engine(Game.Default_boardsize, seed, this.callbacks);
+    this.started = false;
+  }
+
+  start() {
     //gotta put something on the board so the game can start
-    this.engine.place_2_4();
+    if (!this.started) {
+      this.engine.place_2_4();
+      this.started = true;
+    }
   }
 
   /**
@@ -72,6 +99,8 @@ export class Game {
    *  Returns: true if the move was performed, false otherwise.
    */
   move(Move_code) {
+    if (!this.started)
+      return;
     let res = false;
     switch(Move_code) {
       case Game.Move_code.Up:
