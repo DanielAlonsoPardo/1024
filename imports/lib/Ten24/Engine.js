@@ -354,8 +354,8 @@ export class Engine {
   /** on_combine
    *  Provides a hook to execute callbacks before combining numbers
    *
-   *  callback(combinedNumberInfo)
-   *
+   *    callback(combinedNumberInfo)
+   *      combinedNumberInfo -> Info of the number resulting from combination
    *
    */
   on_combine(callback) {

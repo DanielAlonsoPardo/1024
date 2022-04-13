@@ -71,6 +71,29 @@ export const UnitTests = function() {
             slide: { distance: 3, direction: "u" } }, 'number did not slide up');
         });
       });
+      describe("callback_on_combine", function() {
+        let board;
+        beforeEach(function() {
+          board = new Ten24Board();
+          board.setState = () => {};
+        });
+        it("moves a number around", function() {
+          let found;
+          let topLeft = { value: 4, position: { column: 0, row: 0 } };
+          let combined = { value: 8, position: { ...topLeft.position } };
+
+          board.callback_on_place(topLeft);
+          board.callback_on_place(topLeft);
+
+          assert.lengthOf(board.numbersInPlay, 2, 'test did not initialize');
+          assert.lengthOf(board.tempNumbers, 0, 'test did not initialize 2');
+
+          board.callback_on_combine(combined);
+
+          assert.lengthOf(board.numbersInPlay, 1, 'did not remove old numbers and place new combined');
+          assert.lengthOf(board.tempNumbers, 2, 'did not move old numbers to temp array');
+        });
+      });
     });
   });
 }

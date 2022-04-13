@@ -67,18 +67,18 @@ class Ten24Board extends React.Component {
    *    slideInfo -> type of slide to be performed
    */
   callback_on_slide(fromInfo, toInfo, slideInfo) {
-    let from, to, travel;
-    from = { ...fromInfo.position };
-    to = { ...toInfo.position }
-    travel = {
+    let travel = {
       distance: Math.abs(slideInfo.to - slideInfo.from),
       direction: Ten24.Game.translate_slideInfo(slideInfo)
     }
-    this.slideNumber(from, to, travel);
+    this.slideNumber(fromInfo.position, toInfo.position, travel);
   }
 
-  callback_on_combine() {
-    console.log("callback_on_combine");
+  /** callback(combinedNumberInfo)
+   *
+  **/
+  callback_on_combine(combinedNumberInfo) {
+    this.combineNumbers(combinedNumberInfo.position, combinedNumberInfo.value);
   }
 
   /**
