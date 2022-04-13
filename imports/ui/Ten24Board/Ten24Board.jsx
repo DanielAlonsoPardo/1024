@@ -133,12 +133,6 @@ class Ten24Board extends React.Component {
     let numberFrom = (n) => (n.position.column == from.column &&
                              n.position.row == from.row)
     let n = this.numbersInPlay.find(numberFrom);
-    if (from.row == 1 && from.column == 2) {
-      console.log("caught ")
-      console.log(from)
-      console.log(to)
-      console.log(travel)
-    }
     if (!n) return;
 
     n.position = to;
@@ -179,7 +173,8 @@ class Ten24Board extends React.Component {
   move(moveCode) {
     //temporary number cleanup
     this.tempNumbers = [];
-    this.setState({ tempNumbers: this.tempNumbers });
+    this.numbersInPlay = this.numbersInPlay.map(n => { n.slide = null; return n; });
+    this.setState({ tempNumbers: this.tempNumbers, numbersInPlay: this.numbersInPlay });
     this.game.move(moveCode);
     let n = 0;
     for (let x of this.game.engine.board)
