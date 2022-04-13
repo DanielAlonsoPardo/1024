@@ -35,7 +35,8 @@ class Ten24Board extends React.Component {
     classNames = "ten24-cell "
       + `ten24-row-${number.position.row} `
       + `ten24-col-${number.position.column} `
-      + (number.slide ? `slide-from-${number.slide.direction}-${number.slide.distance} sliding` : "");
+      + (number.slide ? `slide-from-${number.slide.direction}-${number.slide.distance} sliding` : "")
+      + (number.combined ? `combined` : "");
     return (<div className={ classNames } key={ number.id }> { number.value } </div>);
   }
 
@@ -59,6 +60,10 @@ class Ten24Board extends React.Component {
       on_place: this.callback_on_place.bind(this)
     };
     this.game = new Ten24.Game(this.props?.seed, callbacks);
+  }
+
+  componentDidMount() {
+    this.game.start();
   }
 
   /*  callback_on_slide(fromInfo, toInfo, slideInfo)
@@ -97,7 +102,7 @@ class Ten24Board extends React.Component {
    * Creates a new number tile to be displayed on the board
    *
    */
-  placeNumber(row, column, value, combined) {
+  placeNumber(row, column, value, combined, debugflag) {
     let number = {
       position: {
         row,
@@ -111,8 +116,10 @@ class Ten24Board extends React.Component {
 
     this.numbersInPlay.push(number);
     this.ID++;
-    //friendly reminder that mutating numbersInPlay then setting it to itself will not cause a re-render
-    this.setState({ ID: this.ID, numbersInPlay: this.numbersInPlay });
+    this.setState({
+      ID: this.ID,
+      numbersInPlay: this.numbersInPlay//friendly reminder that this line might not force a re-render
+    });
   }
 
   /**
@@ -126,15 +133,21 @@ class Ten24Board extends React.Component {
     let numberFrom = (n) => (n.position.column == from.column &&
                              n.position.row == from.row)
     let n = this.numbersInPlay.find(numberFrom);
+    if (from.row == 1 && from.column == 2) {
+      console.log("caught ")
+      console.log(from)
+      console.log(to)
+      console.log(travel)
+    }
     if (!n) return;
 
     n.position = to;
     n.slide = { ...travel };
+    n.combined = 0;
 
     this.ID++;
     this.setState({
-      //friendly reminder that mutating numbersInPlay then setting it to itself will not cause a re-render
-      numbersInPlay: this.numbersInPlay,
+      numbersInPlay: this.numbersInPlay,//friendly reminder that this line might not force a re-render
       ID: this.ID//force a re-render.
     });
   }
@@ -149,18 +162,28 @@ class Ten24Board extends React.Component {
    *    and must be taken out of `numbersInPlay` and into `tempNumbers`.
    */
   combineNumbers(pos, value) {
-    let overwritable = (number) => (number.position.row    == pos.row &&
-                                    number.position.column == pos.column)
+    let combinable = (number) => (number.position.row    == pos.row &&
+                                  number.position.column == pos.column)
     //move any numbers that have combined out of the board and into temp numbers
-    let numbersLeft = this.numbersInPlay.filter(n => !overwritable(n));
-    let numbersToCombine = this.numbersInPlay.filter(overwritable);
-    this.tempNumbers = this.tempNumbers.concat(numbersToCombine)
+    let numbersLeft = this.numbersInPlay.filter(n => !combinable(n));
+    let numbersToCombine = this.numbersInPlay.filter(combinable).map(n => { n.combined = 0; return n });
+    this.tempNumbers = this.tempNumbers.concat(numbersToCombine);
     this.numbersInPlay = numbersLeft;
     this.setState({ numbersInPlay: this.numbersInPlay, tempNumbers: this.tempNumbers });
 
     //place new number on the board
-    let combined = Math.max(...(numbersToCombine.map(n => n.slide?.distance)));
+    let combined = Math.max(0, ...numbersToCombine.map(n => n.slide?.distance || 0));
     this.placeNumber(pos.row, pos.column, value, combined || 0);
+  }
+
+  move(moveCode) {
+    //temporary number cleanup
+    this.tempNumbers = [];
+    this.setState({ tempNumbers: this.tempNumbers });
+    this.game.move(moveCode);
+    let n = 0;
+    for (let x of this.game.engine.board)
+      console.log(x, n++);
   }
 
   render() {
@@ -175,10 +198,10 @@ class Ten24Board extends React.Component {
 
     return (
       <div className="ten24-board">
-        <button onClick={ e => {  } }>up</button>
-        <button onClick={ e => {  } }>down</button>
-        <button onClick={ e => {  } }>left</button>
-        <button onClick={ e => {  } }>right</button>
+        <button onClick={ e => { this.move(Ten24.Game.Move_code.Up) } }>up</button>
+        <button onClick={ e => { this.move(Ten24.Game.Move_code.Down) } }>down</button>
+        <button onClick={ e => { this.move(Ten24.Game.Move_code.Left) } }>left</button>
+        <button onClick={ e => { this.move(Ten24.Game.Move_code.Right) } }>right</button>
         <button onClick={ e => { console.log("numbersInPlay:");
                                  this.state.numbersInPlay.map(n => console.log(n));
                                  console.log("tempNumbers:");

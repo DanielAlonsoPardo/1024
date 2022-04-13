@@ -294,6 +294,38 @@ export const UnitTests = function() {
         assert.deepEqual(args, expected_args, "Incorrect arguments passed to on_slide callback when sliding left");
       });
 
+      it("on_slide fires during secondary slides", function() {
+        engine.board[0] = [8, 2, 0, 0];
+        engine.board[1] = [4, 0, 2, 0];
+        engine.board[2] = [0, 0, 0, 0];
+        engine.board[3] = [2, 0, 0, 0];
+        engine.update_game_state();
+
+        let expected_args = {
+          fromInfo: {
+            value: 2,
+            position: {
+              row: 1,
+              column: 2 } },
+          toInfo: {
+            value: 0,
+            position: {
+              row: 1,
+              column: 1 } },
+          slideInfo: {
+            from: 2,
+            to: 1,
+            slideAwayFromStart: false,
+            slideVertically: false } };
+        let args;
+        let f = (fromInfo, toInfo, slideInfo) => {
+          args = { fromInfo, toInfo, slideInfo };
+        };
+        engine.on_slide(f);
+        engine.slide_numbers_raw(false, false, true); //slide left
+        assert.deepEqual(args, expected_args);
+      })
+
       it("calls on_combine", function() {
         let executed = false;
         let args;

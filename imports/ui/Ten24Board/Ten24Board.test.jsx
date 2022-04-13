@@ -56,29 +56,45 @@ export const UnitTests = function() {
           let travelLeft  = { distance: 3, direction: Game.Move_code.Left };
           let travelUp    = { distance: 3, direction: Game.Move_code.Up };
 
-          board.placeNumber(topLeft.row, topLeft.column, 128);
+          let expectedNumber = {
+            value: 8,
+            position: topLeft,
+            combined: 0,
+            slide: null
+          }
+
+          board.placeNumber(expectedNumber.position.row, expectedNumber.position.column, expectedNumber.value);
           assert.lengthOf(board.numbersInPlay, 1, 'test did not initialize');
 
           //slide to the right
           board.slideNumber(topLeft, topRight, travelRight)
-          assert.deepInclude(board.numbersInPlay[0], { position: topRight }, 'number did not slide right');
+          expectedNumber.position = topRight;
+          expectedNumber.slide = travelRight;
+          assert.deepInclude(board.numbersInPlay[0], expectedNumber, 'number did not slide right');
+
 
           //slide to the bottom
           board.slideNumber(topRight, bottomRight, travelDown)
-          assert.deepInclude(board.numbersInPlay[0], { position: bottomRight }, 'number did not slide right');
+          expectedNumber.position = bottomRight;
+          expectedNumber.slide = travelDown;
+          assert.deepInclude(board.numbersInPlay[0], expectedNumber, 'number did not slide right');
 
           //slide to the left
           board.slideNumber(bottomRight, bottomLeft, travelLeft)
-          assert.deepInclude(board.numbersInPlay[0], { position: bottomLeft }, 'number did not slide right');
+          expectedNumber.position = bottomLeft;
+          expectedNumber.slide = travelLeft;
+          assert.deepInclude(board.numbersInPlay[0], expectedNumber, 'number did not slide right');
 
           //slide to the top
           board.slideNumber(bottomLeft, topLeft, travelUp)
-          assert.deepInclude(board.numbersInPlay[0], { position: topLeft }, 'number did not slide right');
+          expectedNumber.position = topLeft;
+          expectedNumber.slide = travelUp;
+          assert.deepInclude(board.numbersInPlay[0], expectedNumber, 'number did not slide right');
 
 
         });
       });
-      describe("onCombine", function() {
+      describe("combineNumber", function() {
         let board;
         beforeEach(function() {
           board = new Ten24Board();
@@ -87,16 +103,32 @@ export const UnitTests = function() {
         it("moves a number around", function() {
           let found;
           let topLeft = { value: 4, position: { column: 0, row: 0 } };
+          let topRight = { value: 4, position: { column: 3, row: 0 } };
           let combined = { value: 8, position: { ...topLeft.position } };
+          let travelLeft  = { distance: 3, direction: Game.Move_code.Left };
 
-          board.placeNumber(topLeft.position.row, topLeft.position.column, 128);
-          board.placeNumber(topLeft.position.row, topLeft.position.column, 128);
+          let expectedNumber = {
+            value: 8,
+            position: topLeft.position,
+            combined: 3,
+            slide: null
+          }
+          board.placeNumber(topLeft.position.row, topLeft.position.column, topLeft.value);
+          board.placeNumber(topRight.position.row, topRight.position.column, topRight.value);
           assert.lengthOf(board.numbersInPlay, 2, 'test did not initialize');
           assert.lengthOf(board.tempNumbers, 0, 'test did not initialize 2');
 
+          //slide to the left
+          board.slideNumber(topRight.position, topLeft.position, travelLeft);
           board.combineNumbers(combined.position, combined.value);
           assert.lengthOf(board.numbersInPlay, 1, 'did not remove old numbers and place new combined');
           assert.lengthOf(board.tempNumbers, 2, 'did not move old numbers to temp array');
+          assert.deepInclude(board.numbersInPlay[0], expectedNumber);
+
+          board.placeNumber(expectedNumber.position.row, expectedNumber.position.column, expectedNumber.value);
+          board.combineNumbers(expectedNumber.position, expectedNumber.value * 2);
+          let all_good = board.tempNumbers.reduce((acc, n) => acc && n.combined == 0 , true);
+          assert.isTrue(all_good, "resets `combined` value on numbers moved to tempNumbers");
         });
       });
     });

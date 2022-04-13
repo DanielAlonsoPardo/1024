@@ -53,6 +53,16 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
   width: $cell-length;
   height: $cell-length;
   border-radius: 1rem;
+  /*center number value on tile*/
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.ten24-cell.combined {
+  z-index: 1;
 }
 
 .ten24-board-empty-cell-layer {}

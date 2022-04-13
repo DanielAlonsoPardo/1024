@@ -148,7 +148,7 @@ export class Engine {
   get_cell_vertical = (col, cell) => this.board[cell][col];
   set_cell_horizontal = (row, cell, value) => this.board[row][cell] = value;
   get_cell_horizontal = (row, cell) => this.board[row][cell];
-  slide_numbers_raw(slideAwayFromStart, slideVertically) {
+  slide_numbers_raw(slideAwayFromStart, slideVertically, debugFlag) {
     //these functions are essentially used to iterate through board cells
     //they change depending on what side you're sliding towards
     //sliding right/down or up/left?
@@ -195,6 +195,7 @@ export class Engine {
             to = next_position(to);
             if (from != to) {
               //there's room to slide 'to' towards 'from'
+              this.slide_callback(row, from, to, slideAwayFromStart, slideVertically);
               set_cell(row, to, get_cell(row, from));
               set_cell(row, from, 0);
               a_number_moved = true;
@@ -230,6 +231,7 @@ export class Engine {
       return false;
 
     let target_cell = Math.floor(this.game_state.zero_count * this.rng.random());
+    let found = false;
 
     let current_empty_cell = 0;
     let row, col;
@@ -238,18 +240,19 @@ export class Engine {
         if (this.board[row][col] == 0) {
           if (current_empty_cell == target_cell) {
             this.board[row][col] = number;
-            current_empty_cell++;
+            found = true;
+            current_empty_cell++
             break;
           } else {
             current_empty_cell++;
           }
         }
       }
+      if (found) break;
     }
 
     this.update_max_number(number)
     this.game_state.zero_count--;
-
     this.place_callback({
       value: number,
       position: {
@@ -367,8 +370,8 @@ export class Engine {
       return;
 
     let get_cell = (slideVertically ? this.get_cell_vertical : this.get_cell_horizontal);
-    let get_row = (slideAwayFromStart ? (row, col) => col : (row, col) => row);
-    let get_col = (slideAwayFromStart ? (row, col) => row : (row, col) => col);
+    let get_row = (slideVertically ? (row, col) => col : (row, col) => row);
+    let get_col = (slideVertically ? (row, col) => row : (row, col) => col);
 
     let combinedNumber = {
       value: get_cell(row, from) + get_cell(row, to),
