@@ -8,6 +8,7 @@ $cell-gap: $board-length / 5 / 5;
 /* animation timing */
 $base-sliding-duration: 500ms;
 $base-combining-duration: 200ms;
+$base-creating-duration: 200ms;
 $base-animation-duration: $base-sliding-duration + $base-combining-duration;
 
 $slide-1-duration: $base-sliding-duration * 1 / 3;
@@ -105,57 +106,57 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
 }
-.slide-from-left-1 {
+.slide-from-l-1 {
   animation-name: slide-from-left-1;
   animation-duration: $slide-1-duration;
 }
-.slide-from-left-2 {
+.slide-from-l-2 {
   animation-name: slide-from-left-2;
   animation-duration: $slide-2-duration;
 }
-.slide-from-left-3 {
+.slide-from-l-3 {
   animation-name: slide-from-left-3;
   animation-duration: $slide-3-duration;
 }
-.slide-from-right-1 {
+.slide-from-r-1 {
   animation-name: slide-from-right-1;
   animation-duration: $slide-1-duration;
 }
-.slide-from-right-2 {
+.slide-from-r-2 {
   animation-name: slide-from-right-2;
   animation-duration: $slide-2-duration;
 }
-.slide-from-right-3 {
+.slide-from-r-3 {
   animation-name: slide-from-right-3;
   animation-duration: $slide-3-duration;
 }
-.slide-from-up-1 {
+.slide-from-u-1 {
   animation-name: slide-from-up-1;
   animation-duration: $slide-1-duration;
 }
-.slide-from-up-2 {
+.slide-from-u-2 {
   animation-name: slide-from-up-2;
   animation-duration: $slide-2-duration;
 }
-.slide-from-up-3 {
+.slide-from-u-3 {
   animation-name: slide-from-up-3;
   animation-duration: $slide-3-duration;
 }
-.slide-from-down-1 {
+.slide-from-d-1 {
   animation-name: slide-from-down-1;
   animation-duration: $slide-1-duration;
 }
-.slide-from-down-2 {
+.slide-from-d-2 {
   animation-name: slide-from-down-2;
   animation-duration: $slide-2-duration;
 }
-.slide-from-down-3 {
+.slide-from-d-3 {
   animation-name: slide-from-down-3;
   animation-duration: $slide-3-duration;
 }
 @keyframes slide-from-left-1 {
   from {
-    transform: translate($cell-length + $cell-gap * 1, 0);
+    transform: translate(($cell-length + $cell-gap) * 1, 0);
   }
   to {
     transform: translate(0, 0);
@@ -163,7 +164,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 }
 @keyframes slide-from-left-2 {
   from {
-    transform: translate($cell-length + $cell-gap * 2, 0);
+    transform: translate(($cell-length + $cell-gap) * 2, 0);
   }
   to {
     transform: translate(0, 0);
@@ -171,7 +172,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 }
 @keyframes slide-from-left-3 {
   from {
-    transform: translate($cell-length + $cell-gap * 3, 0);
+    transform: translate(($cell-length + $cell-gap) * 3, 0);
   }
   to {
     transform: translate(0, 0);
@@ -203,7 +204,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 }
 @keyframes slide-from-up-1 {
   from {
-    transform: translate(0, $cell-length + $cell-gap * 1);
+    transform: translate(0, ($cell-length + $cell-gap) * 1);
   }
   to {
     transform: translate(0, 0);
@@ -211,7 +212,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 }
 @keyframes slide-from-up-2 {
   from {
-    transform: translate(0, $cell-length + $cell-gap * 2);
+    transform: translate(0, ($cell-length + $cell-gap) * 2);
   }
   to {
     transform: translate(0, 0);
@@ -219,7 +220,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 }
 @keyframes slide-from-up-3 {
   from {
-    transform: translate(0, $cell-length + $cell-gap * 3);
+    transform: translate(0, ($cell-length + $cell-gap) * 3);
   }
   to {
     transform: translate(0, 0);
@@ -247,5 +248,27 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
   }
   to {
     transform: translate(0, 0);
+  }
+}
+
+.created {
+  opacity: 0;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  animation-name: created;
+  animation-delay: $base-sliding-duration;
+  animation-duration: $base-creating-duration;
+}
+
+@keyframes created {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    transform: scale(2, 2);
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
   }
 }

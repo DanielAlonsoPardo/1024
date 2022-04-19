@@ -23,20 +23,22 @@ class Ten24Board extends React.Component {
    *      column },
    *    combined, //0, if the cell was not created from being combined
    *             //equals to the distance of the farthest number being combined 
+   *    created, // true if it was created this turn.
    *    slide: { //optional, if the cell should be shown as sliding
    *             //to be interpreted as "where this tile slid from to end up where it is"
-   *      direction, //<"up"|"down"|"left"|"right">
+   *      direction, //one of Ten24.Game.Move_code
    *      distance   //1-3 },
    *  }
    *
-   */
+  **/
   static renderNumber(number) {
     let classNames = "";
     classNames = "ten24-cell "
       + `ten24-row-${number.position.row} `
       + `ten24-col-${number.position.column} `
-      + (number.slide ? `slide-from-${number.slide.direction}-${number.slide.distance} sliding` : "")
-      + (number.combined ? `combined` : "");
+      + (number.slide ? `slide-from-${number.slide.direction}-${number.slide.distance} sliding ` : "")
+      + (number.combined ? `combined ` : "")
+      + (number.created ? `created ` : "")
     return (<div className={ classNames } key={ number.id }> { number.value } </div>);
   }
 
@@ -111,6 +113,7 @@ class Ten24Board extends React.Component {
       combined: combined || 0,
       slide: null,
       value,
+      created: combined ? false : true,
       id: this.ID
     }
 
@@ -137,7 +140,6 @@ class Ten24Board extends React.Component {
 
     n.position = to;
     n.slide = { ...travel };
-    n.combined = 0;
 
     this.ID++;
     this.setState({
@@ -171,14 +173,19 @@ class Ten24Board extends React.Component {
   }
 
   move(moveCode) {
-    //temporary number cleanup
+    //number cleanup
+    //tempNumbers are for rendering purposes only and should be removed to last only one turn
     this.tempNumbers = [];
-    this.numbersInPlay = this.numbersInPlay.map(n => { n.slide = null; return n; });
+    //reset single-turn states
+    this.numbersInPlay = this.numbersInPlay.map(n => {
+      n.slide = null;
+      n.combined = 0;
+      n.created = false;
+      return n; 
+    });
     this.setState({ tempNumbers: this.tempNumbers, numbersInPlay: this.numbersInPlay });
     this.game.move(moveCode);
     let n = 0;
-    for (let x of this.game.engine.board)
-      console.log(x, n++);
   }
 
   render() {
