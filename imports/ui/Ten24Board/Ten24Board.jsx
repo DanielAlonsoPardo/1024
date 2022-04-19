@@ -16,7 +16,7 @@ class Ten24Board extends React.Component {
    *    number -> Should contain all the info necessary to render a number on the board.
    *
    *  number = {
-   *    value, //preferably powers of 2 only
+   *    value, //powers of 2 only
    *    id,    //its React key
    *    position: {
    *      row,
@@ -39,6 +39,7 @@ class Ten24Board extends React.Component {
       + (number.slide ? `slide-from-${number.slide.direction}-${number.slide.distance} sliding ` : "")
       + (number.combined ? `combined appear-delay-${number.combined} ` : "")
       + ((number.created && ! number.combined) ? `created appear-delay-${globalDelay || 3} ` : "")
+      + `value-${(number.value < 2**16+1) ? number.value : "max"}`
     return (<div className={ classNames } key={ number.id }> { number.value } </div>);
   }
 
@@ -67,6 +68,23 @@ class Ten24Board extends React.Component {
 
   componentDidMount() {
     this.game.start();
+//    this.placeNumber(0, 0, 2**1, 0);
+//    this.placeNumber(0, 1, 2**2, 0);
+//    this.placeNumber(0, 2, 2**3, 0);
+//    this.placeNumber(0, 3, 2**4, 0);
+//    this.placeNumber(1, 0, 2**5, 0);
+//    this.placeNumber(1, 1, 2**6, 0);
+//    this.placeNumber(1, 2, 2**7, 0);
+//    this.placeNumber(1, 3, 2**8, 0);
+//    this.placeNumber(2, 0, 2**9, 0);
+//    this.placeNumber(2, 1, 2**10, 0);
+//    this.placeNumber(2, 2, 2**11, 0);
+//    this.placeNumber(2, 3, 2**12, 0);
+//    this.placeNumber(3, 0, 2**13, 0);
+//    this.placeNumber(3, 1, 2**14, 0);
+//    this.placeNumber(3, 2, 2**15, 0);
+//    this.placeNumber(3, 3, 2**16, 0);
+
     this.boardRef.current.focus();
   }
 
@@ -106,7 +124,7 @@ class Ten24Board extends React.Component {
    * Creates a new number tile to be displayed on the board
    *
    */
-  placeNumber(row, column, value, combined, debugflag) {
+  placeNumber(row, column, value, combined) {
     let number = {
       position: {
         row,

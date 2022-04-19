@@ -47,7 +47,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
   width: 100%;
 
   border-radius: 1rem;
-  background: chocolate;
+  background: #274145;
 }
 
 .ten24-cell {
@@ -61,6 +61,8 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
   align-content: center;
   flex-direction: column;
   text-align: center;
+
+  font-size: 2em;
 }
 
 .ten24-cell.combined {
@@ -70,12 +72,12 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 .ten24-board-empty-cell-layer {}
 .ten24-board-empty-cell-layer > .ten24-cell {
   border-radius: 1.1rem;/*set to slightly higher than ten24-cell so the edges get covered by normal tiles*/
-  background: bisque;
+  background: darkslategrey;
 }
 
 .ten24-board-numbers-layer {}
 .ten24-board-numbers-layer > .ten24-cell {
-  background: grey;
+  background: red;
 }
 
 .ten24-col-0 {
@@ -306,4 +308,68 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
     transform: scale(1, 1);
     opacity: 1;
   }
+}
+
+.ten24-cell.value-2 {
+  background-color: #1FDAFF;
+}
+
+.ten24-cell.value-4 {
+  background-color: #0BAAAD;
+}
+
+.ten24-cell.value-8 {
+  background-color: #94d2bd;
+}
+
+.ten24-cell.value-16 {
+  background-color: #e9d8a6;
+}
+
+.ten24-cell.value-32 {
+  background-color: #ffba08;
+}
+
+.ten24-cell.value-64 {
+  background-color: #f48c06;
+}
+
+.ten24-cell.value-128 {
+  background-color: #e85d04;
+}
+
+.ten24-cell.value-256 {
+  background-color: #d00000;
+}
+
+.ten24-cell.value-512 {
+  background-color: #9d0208;
+}
+
+.ten24-cell.value-1024 {
+  background-color: fuchsia;
+}
+
+.ten24-cell.value-2048 {
+  background-color: bisque;
+}
+
+.ten24-cell.value-4096 {
+  background-color: bisque;
+}
+
+.ten24-cell.value-8192 {
+  background-color: bisque;
+}
+
+.ten24-cell.value-16384 {
+  background-color: bisque;
+}
+
+.ten24-cell.value-32768 {
+  background-color: bisque;
+}
+
+.ten24-cell.value-65536 {
+  background-color: bisque;
 }
