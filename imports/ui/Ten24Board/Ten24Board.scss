@@ -6,7 +6,7 @@ $cell-length: $board-length / 5;
 $cell-gap: $board-length / 5 / 5;
 
 /* animation timing */
-$base-sliding-duration: 500ms;
+$base-sliding-duration: 200ms;
 $base-combining-duration: 200ms;
 $base-creating-duration: 200ms;
 $base-animation-duration: $base-sliding-duration + $base-combining-duration;
@@ -103,7 +103,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 }
 
 .sliding {
-  animation-timing-function: linear;
+  animation-timing-function: ease-in;
   animation-fill-mode: forwards;
 }
 .slide-from-l-1 {
@@ -251,16 +251,49 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
   }
 }
 
-.created {
+.ten24-cell.created {
   opacity: 0;
   animation-timing-function: linear;
   animation-fill-mode: forwards;
   animation-name: created;
-  animation-delay: $base-sliding-duration;
   animation-duration: $base-creating-duration;
 }
 
 @keyframes created {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2, 1.2);
+  }
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+
+.ten24-cell.combined {
+  z-index: 1;
+  opacity: 0;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  animation-name: combined;
+  animation-duration: $base-combining-duration;
+}
+
+.ten24-cell.appear-delay-1 {
+  animation-delay: ($base-sliding-duration / 3) * 1;
+}
+
+.ten24-cell.appear-delay-2 {
+  animation-delay: ($base-sliding-duration / 3) * 2;
+}
+
+.ten24-cell.appear-delay-3 {
+  animation-delay: ($base-sliding-duration / 3) * 3;
+}
+
+@keyframes combined {
   0% {
     opacity: 1;
   }

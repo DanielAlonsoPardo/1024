@@ -31,14 +31,14 @@ class Ten24Board extends React.Component {
    *  }
    *
   **/
-  static renderNumber(number) {
+  static renderNumber(number, globalDelay) {
     let classNames = "";
     classNames = "ten24-cell "
       + `ten24-row-${number.position.row} `
       + `ten24-col-${number.position.column} `
       + (number.slide ? `slide-from-${number.slide.direction}-${number.slide.distance} sliding ` : "")
-      + (number.combined ? `combined ` : "")
-      + (number.created ? `created ` : "")
+      + (number.combined ? `combined appear-delay-${number.combined} ` : "")
+      + ((number.created && ! number.combined) ? `created appear-delay-${globalDelay || 3} ` : "")
     return (<div className={ classNames } key={ number.id }> { number.value } </div>);
   }
 
@@ -197,6 +197,11 @@ class Ten24Board extends React.Component {
           divs.push(<div className={ `ten24-cell ten24-col-${col} ten24-row-${row}` } key={id++}></div>);
       return divs;
     }
+    let renderAllNumbers = () => {
+      let allNumbers = this.state.numbersInPlay.concat(this.state.tempNumbers);
+      let maxSlideDistance = allNumbers.reduce((acc, n) => Math.max(n.slide?.distance || 0, acc), 1);
+      return allNumbers.map(n => Ten24Board.renderNumber(n, maxSlideDistance));
+    }
 
     return (
       <div className="ten24-board">
@@ -216,8 +221,7 @@ class Ten24Board extends React.Component {
           { fillWithEmptyCells() }
         </div>
         <div className="ten24-board-numbers-layer ten24-board-layer">
-          { this.state.numbersInPlay.map(n => Ten24Board.renderNumber(n)) }
-          { this.state.tempNumbers.map(n => Ten24Board.renderNumber(n)) }
+          { renderAllNumbers() }
         </div>
       </div>
     )
