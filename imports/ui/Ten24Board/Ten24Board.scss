@@ -69,6 +69,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 
 .ten24-board-empty-cell-layer {}
 .ten24-board-empty-cell-layer > .ten24-cell {
+  border-radius: 1.1rem;/*set to slightly higher than ten24-cell so the edges get covered by normal tiles*/
   background: bisque;
 }
 

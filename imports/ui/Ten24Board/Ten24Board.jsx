@@ -190,6 +190,20 @@ class Ten24Board extends React.Component {
     let n = 0;
   }
 
+  inputHandling(e) {
+    e.preventDefault();
+    if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+      e.preventDefault();
+      switch (e.key) {
+        case "ArrowRight": this.move(Ten24.Game.Move_code.Right); break;
+        case "ArrowUp"   : this.move(Ten24.Game.Move_code.Up);    break;
+        case "ArrowDown" : this.move(Ten24.Game.Move_code.Down);  break;
+        case "ArrowLeft" : this.move(Ten24.Game.Move_code.Left);  break;
+      }
+    }
+
+  }
+
   render() {
     let fillWithEmptyCells = () => {
       let divs = [];
@@ -207,7 +221,7 @@ class Ten24Board extends React.Component {
 
     return (
       <div className="ten24-board"
-           onKeyDown={ e => { e.preventDefault(); console.log("hello") } }
+           onKeyDown={ this.inputHandling.bind(this) }
            tabIndex="0"
            ref={ this.boardRef }>
         <button onClick={ e => { this.move(Ten24.Game.Move_code.Up) } }>up</button>
