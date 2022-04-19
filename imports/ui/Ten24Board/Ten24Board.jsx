@@ -62,10 +62,12 @@ class Ten24Board extends React.Component {
       on_place: this.callback_on_place.bind(this)
     };
     this.game = new Ten24.Game(this.props?.seed, callbacks);
+    this.boardRef = React.createRef();
   }
 
   componentDidMount() {
     this.game.start();
+    this.boardRef.current.focus();
   }
 
   /*  callback_on_slide(fromInfo, toInfo, slideInfo)
@@ -204,12 +206,15 @@ class Ten24Board extends React.Component {
     }
 
     return (
-      <div className="ten24-board">
+      <div className="ten24-board"
+           onKeyDown={ e => { e.preventDefault(); console.log("hello") } }
+           tabIndex="0"
+           ref={ this.boardRef }>
         <button onClick={ e => { this.move(Ten24.Game.Move_code.Up) } }>up</button>
         <button onClick={ e => { this.move(Ten24.Game.Move_code.Down) } }>down</button>
         <button onClick={ e => { this.move(Ten24.Game.Move_code.Left) } }>left</button>
         <button onClick={ e => { this.move(Ten24.Game.Move_code.Right) } }>right</button>
-        <button onClick={ e => { console.log("numbersInPlay:");
+        <button autoFocus onClick={ e => { console.log("numbersInPlay:");
                                  this.state.numbersInPlay.map(n => console.log(n));
                                  console.log("tempNumbers:");
                                  this.state.tempNumbers.map(n=> console.log(n)); } }>

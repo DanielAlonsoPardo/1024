@@ -18,6 +18,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 .ten24-board {
   height: $board-length;
   width: $board-length;
+  outline:none;
 }
 
 /* old gridlayer using grid (doesn't animate very well)
