@@ -18,7 +18,11 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 .ten24-board {
   height: $board-length;
   width: $board-length;
-  outline:none;
+  outline: none;
+
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 /* old gridlayer using grid (doesn't animate very well)
@@ -39,6 +43,20 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
   height: 100%;
   width: 100%;
   position: absolute;
+}
+
+.ten24-pause-screen {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 1rem;
+
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  text-align: center;
 }
 
 .ten24-board-background-layer {

@@ -51,7 +51,8 @@ class Ten24Board extends React.Component {
   state = {
     numbersInPlay: this.numbersInPlay,
     tempNumbers: this.tempNumbers,
-    ID: this.ID
+    ID: this.ID,
+    paused: true
   };
   game = null;
 
@@ -208,8 +209,11 @@ class Ten24Board extends React.Component {
     let n = 0;
   }
 
+  togglePauseScreen() {
+    this.setState({ paused: !this.state.paused });
+  }
+
   inputHandling(e) {
-    e.preventDefault();
     if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
       e.preventDefault();
       switch (e.key) {
@@ -240,26 +244,25 @@ class Ten24Board extends React.Component {
     return (
       <div className="ten24-board"
            onKeyDown={ this.inputHandling.bind(this) }
+           onFocus={ this.togglePauseScreen.bind(this) }
+           onBlur={ this.togglePauseScreen.bind(this) }
            tabIndex="0"
            ref={ this.boardRef }>
-        <button onClick={ e => { this.move(Ten24.Game.Move_code.Up) } }>up</button>
-        <button onClick={ e => { this.move(Ten24.Game.Move_code.Down) } }>down</button>
-        <button onClick={ e => { this.move(Ten24.Game.Move_code.Left) } }>left</button>
-        <button onClick={ e => { this.move(Ten24.Game.Move_code.Right) } }>right</button>
-        <button autoFocus onClick={ e => { console.log("numbersInPlay:");
-                                 this.state.numbersInPlay.map(n => console.log(n));
-                                 console.log("tempNumbers:");
-                                 this.state.tempNumbers.map(n=> console.log(n)); } }>
-          console log </button>
-  
-        <div className="ten24-board-background-layer">
-        </div>
+        <div className="ten24-board-background-layer"/>
         <div className="ten24-board-empty-cell-layer ten24-board-layer">
           { fillWithEmptyCells() }
         </div>
         <div className="ten24-board-numbers-layer ten24-board-layer">
           { renderAllNumbers() }
         </div>
+        { this.state.paused &&
+          <div className="ten24-pause-screen" >
+            <div>
+              <h1>PAUSED</h1>
+              Click to continue
+            </div>
+          </div>
+        }
       </div>
     )
   }
