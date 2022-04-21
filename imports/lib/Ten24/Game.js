@@ -91,7 +91,7 @@ export class Game {
   };
 
   get_score() {
-    return this.engine.score;
+    return this.engine.game_state.score;
   }
 
   /** move

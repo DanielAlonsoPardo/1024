@@ -52,7 +52,8 @@ class Ten24Board extends React.Component {
     numbersInPlay: this.numbersInPlay,
     tempNumbers: this.tempNumbers,
     ID: this.ID,
-    paused: true
+    paused: true,
+    score: 0,
   };
   game = null;
 
@@ -65,6 +66,10 @@ class Ten24Board extends React.Component {
     };
     this.game = new Ten24.Game(this.props?.seed, callbacks);
     this.boardRef = React.createRef();
+  }
+
+  updateScore() {
+    this.setState({ score: this.game.get_score() });
   }
 
   componentDidMount() {
@@ -85,7 +90,7 @@ class Ten24Board extends React.Component {
 //    this.placeNumber(3, 1, 2**14, 0);
 //    this.placeNumber(3, 2, 2**15, 0);
 //    this.placeNumber(3, 3, 2**16, 0);
-
+    this.updateScore();
     this.boardRef.current.focus();
   }
 
@@ -206,7 +211,7 @@ class Ten24Board extends React.Component {
     });
     this.setState({ tempNumbers: this.tempNumbers, numbersInPlay: this.numbersInPlay });
     this.game.move(moveCode);
-    let n = 0;
+    this.updateScore();
   }
 
   togglePauseScreen() {
@@ -253,7 +258,7 @@ class Ten24Board extends React.Component {
             <div className="ten24-score">
               <div>
                 <div className="ten24-score-title">Score:</div>
-                <div className="ten24-score-value">9000000001</div>
+                <div className="ten24-score-value">{ this.state.score }</div>
               </div>
             </div>
             <div className="ten24-reset">
