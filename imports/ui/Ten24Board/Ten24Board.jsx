@@ -136,7 +136,7 @@ class Ten24Board extends React.Component {
       value,
       created: combined ? false : true,
       id: this.ID
-    }
+    };
 
     this.numbersInPlay.push(number);
     this.ID++;
@@ -242,27 +242,40 @@ class Ten24Board extends React.Component {
     }
 
     return (
-      <div className="ten24-board"
-           onKeyDown={ this.inputHandling.bind(this) }
-           onFocus={ this.togglePauseScreen.bind(this) }
-           onBlur={ this.togglePauseScreen.bind(this) }
-           tabIndex="0"
-           ref={ this.boardRef }>
-        <div className="ten24-board-background-layer"/>
-        <div className="ten24-board-empty-cell-layer ten24-board-layer">
-          { fillWithEmptyCells() }
-        </div>
-        <div className="ten24-board-numbers-layer ten24-board-layer">
-          { renderAllNumbers() }
-        </div>
-        { this.state.paused &&
-          <div className="ten24-pause-screen" >
-            <div>
-              <h1>PAUSED</h1>
-              Click to continue
+      <div className="ten24">
+        <div className="ten24-board"
+             onKeyDown={ this.inputHandling.bind(this) }
+             onFocus={ this.togglePauseScreen.bind(this) }
+             onBlur={ this.togglePauseScreen.bind(this) }
+             tabIndex="0"
+             ref={ this.boardRef }>
+          <div className="ten24-infobox">
+            <div className="ten24-score">
+              <div>
+                <div className="ten24-score-title">Score:</div>
+                <div className="ten24-score-value">9000000001</div>
+              </div>
+            </div>
+            <div className="ten24-reset">
+              <div className="ten24-reset-btn">Reset</div>
             </div>
           </div>
-        }
+          <div className="ten24-board-background-layer"/>
+          <div className="ten24-board-empty-cell-layer ten24-board-layer">
+            { fillWithEmptyCells() }
+          </div>
+          <div className="ten24-board-numbers-layer ten24-board-layer">
+            { renderAllNumbers() }
+          </div>
+          { this.state.paused &&
+            <div className="ten24-pause-screen" >
+              <div>
+                <h1>PAUSED</h1>
+                Click to continue
+              </div>
+            </div>
+          }
+        </div>
       </div>
     )
   }

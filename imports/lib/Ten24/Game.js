@@ -1,13 +1,21 @@
 import { Engine } from './Engine.js'
 /** Methods:
- *    - restart(seed)
- *    - move_<up|down|left|right>() => boolean
- *    - ended() => boolean
- *    - get_record() => recorded_game
- *    - get_score() => score
+ *    - constructor(seed, callbacks)
+ *    - reset(seed)
+ *    - start()
+ *    - ended()
+ *    - get_record()
+ *    - get_score()
+ *    - move(Move_code)
+ *    - switch(Move_code)
+ *    - move_up()
+ *    - move_down()
+ *    - move_left()
+ *    - move_right()
  *
  *  Attributes:
  *    - engine
+ *    - started
  */
 export class Game {
   static Default_boardsize = 4;
@@ -48,9 +56,9 @@ export class Game {
   //
   constructor(seed, callbacks) {
     this.callbacks = callbacks;
-    this.restart(seed);
+    this.reset(seed);
   }
-  restart(seed) {
+  reset(seed) {
     this.game_record = [];
     this.engine = new Engine(Game.Default_boardsize, seed, this.callbacks);
     this.started = false;
