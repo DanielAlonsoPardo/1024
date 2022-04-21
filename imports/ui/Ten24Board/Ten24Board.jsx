@@ -277,12 +277,12 @@ class Ten24Board extends React.Component {
           <div className="ten24-infobox">
             <div className="ten24-score">
               <div>
-                <div className="ten24-score-title">Score:</div>
+                <div className="ten24-score-title">SCORE:</div>
                 <div className="ten24-score-value">{ this.state.score }</div>
               </div>
             </div>
             <div className="ten24-reset">
-              <div className="ten24-reset-btn" onClick={ this.resetBoard.bind(this) }>Reset</div>
+            <div className="ten24-reset-btn" onClick={ this.resetBoard.bind(this) }>Reset</div>
             </div>
           </div>
           <div className="ten24-board-background-layer"/>
