@@ -16,7 +16,7 @@ export const App = () => {
     <>
       <UserAccountBar user={user}/>
       <h1>Play 1024!</h1>
-      <div className="ten24-container"> <Ten24Board seed={10}/> </div>
+      <div className="ten24-container"> <Ten24Board /*seed={10}*//> </div>
       <button onClick={ () => { Meteor.call("sendVerificationEmail") } }>Server Button</button>
     </>
   )

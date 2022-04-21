@@ -64,7 +64,9 @@ class Ten24Board extends React.Component {
       on_combine: this.callback_on_combine.bind(this),
       on_place: this.callback_on_place.bind(this)
     };
-    this.game = new Ten24.Game(this.props?.seed, callbacks);
+    this.game = new Ten24.Game(this.props?.seed ? this.props.seed : 
+                                            (new Date()).getTime(),
+                               callbacks);
     this.boardRef = React.createRef();
   }
 
@@ -231,6 +233,24 @@ class Ten24Board extends React.Component {
 
   }
 
+  resetBoard() {
+    //clear board
+    this.numbersInPlay = [];
+    this.tempNumbers = [];
+    this.setState({
+      numbersInPlay: this.numbersInPlay,
+      tempNumbers: this.tempNumbers,
+      score: 0,
+    });
+
+    //generate rng seed
+    let seed = new Date().getTime();
+    //reset game
+    this.game.reset(seed);
+    //start game
+    this.game.start();
+  }
+
   render() {
     let fillWithEmptyCells = () => {
       let divs = [];
@@ -262,7 +282,7 @@ class Ten24Board extends React.Component {
               </div>
             </div>
             <div className="ten24-reset">
-              <div className="ten24-reset-btn">Reset</div>
+              <div className="ten24-reset-btn" onClick={ this.resetBoard.bind(this) }>Reset</div>
             </div>
           </div>
           <div className="ten24-board-background-layer"/>
