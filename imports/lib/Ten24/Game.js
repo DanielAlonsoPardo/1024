@@ -1,3 +1,5 @@
+import SimpleSchema from 'simpl-schema';
+
 import { Engine } from './Engine.js'
 /** Methods:
  *    - constructor(seed, callbacks)
@@ -147,3 +149,17 @@ export class Game {
   }
 
 }
+
+export const Record = {
+  Schema: new SimpleSchema({
+//    input: ['u', 'd'],
+    input: {
+      type: Array,
+    },
+    "input.$": {
+      type: String,
+      allowedValues: [...Object.values(Game.Move_code)],
+    },
+    seed: SimpleSchema.Integer,
+  })
+};

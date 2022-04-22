@@ -1,6 +1,8 @@
 import { assert } from 'chai';
 
-import { Game } from './Ten24.js';
+import { Game, Record } from './Game.js';
+import { Dummies } from './testing.js';
+import SimpleSchema from 'simpl-schema';
 
 export const UnitTests = function() {
   describe("Game", function() {
@@ -29,6 +31,18 @@ export const UnitTests = function() {
         throw e;
       }
     });
+    describe("Record schema", function() {
+      const Schema = Record.Schema;
+      let validRecord = Dummies.Game.full_game;
+
+      it("validates correctly", function() {
+        assert.throws(_ => Schema.validate({}), undefined, undefined, "does not reject empty object");
+        assert.doesNotThrow(_ => Schema.validate(validRecord), undefined, undefined, "rejects valid object");
+        let floatingPointSeed = {...validRecord};
+        floatingPointSeed.seed = 0.5;
+        assert.throws(_ => Schema.validate(floatingPointSeed), undefined, undefined, "does not reject decimals in seed");
+      });
+    })
 
   });
 }
