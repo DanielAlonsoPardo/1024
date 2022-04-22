@@ -1,6 +1,6 @@
 import { Game } from './Game.js';
 
-let Game_dummies = {
+let Record_dummies = {
   full_game: (_ => {
     let game = new Game(1);
     game.start();
@@ -15,6 +15,6 @@ let Game_dummies = {
 }
 
 let Dummies = {
-  Game: Game_dummies,
+  Record: Record_dummies,
 };
 export { Dummies };

@@ -4,7 +4,7 @@
   "scripts": {
     "start": "export $(cat .env | xargs) && meteor run --settings settings-production.json",
     "test": "meteor test --once --driver-package meteortesting:mocha --port 3004",
-    "test-app": "TEST_WATCH=1 NODE_ENV=testing meteor test --full-app --driver-package meteortesting:mocha --port 3002",
+    "test-app": "TEST_WATCH=1 NODE_ENV=testing meteor test --full-app --driver-package meteortesting:mocha --port 3002 --raw-logs",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
@@ -13,7 +13,8 @@
     "mersenne-twister": "^1.1.0",
     "meteor-node-stubs": "^1.1.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "simpl-schema": "^1.12.0"
   },
   "meteor": {
     "mainModule": {

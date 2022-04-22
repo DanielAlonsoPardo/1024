@@ -33,7 +33,7 @@ export const UnitTests = function() {
     });
     describe("Record schema", function() {
       const Schema = Record.Schema;
-      let validRecord = Dummies.Game.full_game;
+      let validRecord = Dummies.Record.full_game;
 
       it("validates correctly", function() {
         assert.throws(_ => Schema.validate({}), undefined, undefined, "does not reject empty object");
