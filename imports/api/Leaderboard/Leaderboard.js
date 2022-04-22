@@ -1,9 +1,10 @@
 import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
 import SSchema from 'simpl-schema';
 import { Record } from '/imports/lib/Ten24/Game.js';
 import { Game_replay } from '/imports/lib/Ten24/Game_replay.js';
 
-let Schema = new SSchema({
+export const Schema = new SSchema({
   username: String,
   date: Date,
   record: Record.Schema,
@@ -20,4 +21,6 @@ let Schema = new SSchema({
 });
 
 
-export default { Schema };
+const Leaderboard = new Mongo.Collection("Leaderboard");
+Leaderboard.schema = Schema;
+export { Leaderboard };
