@@ -1,8 +1,7 @@
 import { Game } from './Game.js';
 
-let Record_dummies = {
-  full_game: (_ => {
-    let game = new Game(1);
+let generateRandomGameRecord = (seed) => {
+    let game = new Game(seed|Math.random());
     game.start();
     while(!game.ended()) {
       game.move_up();
@@ -11,10 +10,17 @@ let Record_dummies = {
       game.move_right();
     }
     return game.get_record();
-  })(),
 }
 
+
+let full_game = generateRandomGameRecord();
+
 let Dummies = {
-  Record: Record_dummies,
+  Record: { full_game },
 };
-export { Dummies };
+
+let Generators = {
+  Record: { generate: generateRandomGameRecord },
+}
+
+export { Dummies, Generators };

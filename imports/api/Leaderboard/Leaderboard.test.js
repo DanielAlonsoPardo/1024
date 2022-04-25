@@ -1,30 +1,81 @@
 import { assert } from 'chai';
+import { Random } from 'meteor/random';
+import { Accounts } from 'meteor/accounts-base';
 
-import Leaderboard from './Leaderboard.js';
+import { Leaderboard,
+         Schema,
+         submitScore } from './Leaderboard.js';
 
 import { Dummies as Ten24Dummies } from '/imports/lib/Ten24/testing.js';
 import { Dummies as LeaderboardDummies } from './testing.js';
 
+let valid_leaderboard = LeaderboardDummies.Leaderboard.sample_entry;
+let invalid_score = { ...valid_leaderboard };
+invalid_score.score = valid_leaderboard.score + 1;
+
 export const UnitTests = function() {
   describe("leaderboard tests", function() {
     describe("Schema", function() {
-      const Schema_leaderboard = Leaderboard?.Schema?.newContext();
-      const Schema = Leaderboard?.Schema;
-      let valid_leaderboard = LeaderboardDummies.Leaderboard.sample_entry;
-
       it("loaded correctly", function() {
-        assert.isDefined(Leaderboard);
-        assert.isDefined(Leaderboard?.Schema);
+        assert.isDefined(Schema);
       });
 
       it("validates correctly", function() {
-        let example = valid_leaderboard;
-        assert.throws(_ => Schema.validate({}), undefined, undefined, "does not reject empty object");
-        assert.doesNotThrow(_ => Schema.validate(valid_leaderboard), undefined, undefined, "does not validate a valid leaderboard");
-        let invalid_score = { ...valid_leaderboard };
-        invalid_score.score = valid_leaderboard.score + 1;
-        assert.throws(_ => Schema.validate(invalid_score), undefined, undefined,"does not check score validity");
+        let validate = (o) => (_ => Schema.validate(o))
+        assert.throws(validate({}), undefined, undefined, "does not reject empty object");
+        assert.doesNotThrow(validate(valid_leaderboard), undefined, undefined, "does not validate a valid leaderboard");
+        assert.throws(validate(invalid_score), undefined, undefined,"does not check score validity");
       });
     });
   });
 };
+
+export const ServerUnitTests = function() {
+  describe("leaderboard tests (server only)", function() {
+    describe("Methods", function() {
+      it("Validates on insert", function() {
+        let insert = (o) => (_ => Leaderboard.insert(o))
+        assert.throws(insert({}), undefined, undefined, "does not reject empty object");
+        assert.doesNotThrow(insert(valid_leaderboard), undefined, undefined, "rejects valid object");
+        assert.throws(insert(invalid_score), undefined, undefined, "does not reject invalid score");
+        Leaderboard.remove(valid_leaderboard);
+      });
+      describe("submitScore", function() {
+        let sampleAccount;
+
+        before(function() {
+          let _id = Accounts.createUser({ username: "Lester the tester", password: "aibnexclk" });
+          sampleAccount = Meteor.users.findOne({ _id });
+        });
+
+        after(function() {
+          Meteor.users.remove({ username: sampleAccount.username });
+        });
+
+        afterEach(function() {
+          Leaderboard.remove({ record: valid_leaderboard.record });
+        });
+        it("rejects score if its not from an active user", function() {
+          let submit = _ => submitScore.call({ record: valid_leaderboard.record, score: valid_leaderboard.score });
+          assert.throws(submit, "User must be logged in to submit a score", undefined);
+        });
+        it("accepts score if there is an active user", function() {
+          let submit = _ => submitScore._execute(
+            { userId: sampleAccount._id },
+            { record: valid_leaderboard.record,
+              score: valid_leaderboard.score });
+          assert.doesNotThrow(submit);
+          assert.exists(Leaderboard.findOne({ username: sampleAccount.username }), "score not added to leaderboard");
+        });
+      });
+    });
+  });
+};
+
+export const ClientUnitTests = function() {
+//  describe("leaderboard tests (client only)", function() {
+//    describe("submitScore", function() {
+//      it("exists");
+//    })
+//  });
+}

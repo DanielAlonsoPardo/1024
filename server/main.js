@@ -1,13 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
-import { Accounts } from 'meteor/accounts-base';
 
-const SEED_USERNAME = 'admin';
-const SEED_PASSWORD = 'The GNU General Public License is a free, copyleft license for software and other kinds of works.';
+import { Startup } from './seeding.js';
 
 Meteor.startup(() => {
-  if (!Accounts.findUserByUsername(SEED_USERNAME))
-    Accounts.createUser({ username: SEED_USERNAME, password: SEED_PASSWORD });
+  Startup();
 
   if (!process.env.MAIL_URL) {
     console.warn("environment variable for mailing not set!");
