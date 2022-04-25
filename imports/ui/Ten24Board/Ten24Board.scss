@@ -16,7 +16,7 @@ $slide-2-duration: $base-sliding-duration * 2 / 3;
 $slide-3-duration: $base-sliding-duration * 3 / 3;
 
 .ten24 {
-  margin-bottom: 125px;
+  margin-bottom: 145px;
 }
 
 .ten24-board {
@@ -471,6 +471,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 }
 
 .ten24-reset-btn {
+  cursor: pointer;
   background: rgb(30, 53, 57);
   width: calc(70% - 1em);
   min-width: 140px;
@@ -495,6 +496,7 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
 }
 
 .ten24-submit-score-btn {
+  cursor: pointer;
   margin-left: 3em;
   margin-right: 3em;
   padding-top: 10px;

@@ -56,3 +56,13 @@ export const submitScore = new ValidatedMethod({
     Leaderboard.insert(entry);
   },
 });
+
+export function Publish() {
+  Meteor.publish('Leaderboard', function() {
+    return Leaderboard.find({});
+  });
+}
+
+export function Subscribe() {
+  Meteor.subscribe('Leaderboard');
+}

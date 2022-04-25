@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Email } from 'meteor/email';
 
+import Leaderboard from '/imports/api/Leaderboard/Leaderboard.js';
 import { Startup } from './seeding.js';
 
 Meteor.startup(() => {
@@ -24,3 +25,7 @@ Meteor.methods({
     return true;
   }
 });
+
+
+//publications
+Leaderboard.Publish();

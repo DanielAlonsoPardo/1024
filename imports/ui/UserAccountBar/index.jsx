@@ -50,19 +50,9 @@ export const UserAccountBar = (props) => {
     }    
   }
 
-  function TestMe() {
-    return (
-      <div>
-        <button onClick={() => setUserState("login")}>login</button>
-        <button onClick={() => setUserState("register")}>register</button>
-        <button onClick={() => setUserState("viewProfile")}>viewProfile</button>
-      </div>
-    )
-  }
   const validStates = ["viewProfile", "register", "login", "verificationSent"];
 
   return ( <div className="user-account-bar">
-             <TestMe/>
              <CurrentInfo/>
              <UserAccountButtons/>
            </div> )
