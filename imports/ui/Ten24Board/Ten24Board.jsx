@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Ten24 from '/imports/lib/Ten24';
+import { submitScore } from '/imports/api/Leaderboard/Leaderboard.js';
 
 /** Ten24Board
  *
@@ -54,6 +55,7 @@ class Ten24Board extends React.Component {
     ID: this.ID,
     paused: true,
     score: 0,
+    ended: false,
   };
   game = null;
 
@@ -68,10 +70,6 @@ class Ten24Board extends React.Component {
                                             (new Date()).getTime(),
                                callbacks);
     this.boardRef = React.createRef();
-  }
-
-  updateScore() {
-    this.setState({ score: this.game.get_score() });
   }
 
   componentDidMount() {
@@ -92,7 +90,7 @@ class Ten24Board extends React.Component {
 //    this.placeNumber(3, 1, 2**14, 0);
 //    this.placeNumber(3, 2, 2**15, 0);
 //    this.placeNumber(3, 3, 2**16, 0);
-    this.updateScore();
+    this.setState({ score: this.game.get_score() });
     this.boardRef.current.focus();
   }
 
@@ -212,12 +210,22 @@ class Ten24Board extends React.Component {
       return n; 
     });
     this.setState({ tempNumbers: this.tempNumbers, numbersInPlay: this.numbersInPlay });
+
     this.game.move(moveCode);
-    this.updateScore();
+    this.setState({ ended: this.game.ended(),
+                    score: this.game.get_score() });
   }
 
   togglePauseScreen() {
     this.setState({ paused: !this.state.paused });
+  }
+
+  submitScore() {
+    submitScore.call({
+      record: this.game.get_record(),
+      score: this.game.get_score(),
+    });
+    this.resetBoard();
   }
 
   inputHandling(e) {
@@ -241,6 +249,7 @@ class Ten24Board extends React.Component {
       numbersInPlay: this.numbersInPlay,
       tempNumbers: this.tempNumbers,
       score: 0,
+      ended: false,
     });
 
     //generate rng seed
@@ -292,14 +301,25 @@ class Ten24Board extends React.Component {
           <div className="ten24-board-numbers-layer ten24-board-layer">
             { renderAllNumbers() }
           </div>
-          { this.state.paused &&
+          { this.state.paused && !this.state.ended &&
             <div className="ten24-pause-screen" >
               <div>
                 <h1>PAUSED</h1>
-                Click to continue
+                <span>Click to continue</span>
               </div>
-            </div>
-          }
+            </div> }
+          { this.state.ended &&
+            <div className="ten24-end-game-screen">
+              <div>
+                <h1>GAME ENDED</h1>
+                <h3>Your score: { this.state.score }</h3>
+                { Meteor.user()
+                  ? <div className="ten24-submit-score-btn"
+                         onClick={ this.submitScore.bind(this) }>
+                      Submit score</div>
+                  : <h3>Login to submit score</h3> }
+              </div>
+            </div> }
         </div>
       </div>
     )

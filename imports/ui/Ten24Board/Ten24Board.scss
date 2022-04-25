@@ -65,6 +65,22 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
   text-align: center;
 }
 
+.ten24-end-game-screen {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 1rem;
+
+  z-index: 2;
+
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
 .ten24-board-background-layer {
   position: absolute;
   height: 100%;
@@ -476,4 +492,31 @@ $slide-3-duration: $base-sliding-duration * 3 / 3;
   background: darkslategrey;
   border-color: rgb(30, 53, 57);
   color: rgb(30, 53, 57);
+}
+
+.ten24-submit-score-btn {
+  margin-left: 3em;
+  margin-right: 3em;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  border-radius: 1em;
+  border: 6px solid #1FDAFF;
+
+//  background: #94A1A3;
+  background: rgba(148, 161, 163, 0.75);
+  border-color: black;
+  color: black;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  font-family: Geneva, Verdana, sans-serif;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.ten24-submit-score-btn:active {
+  background: transparent;
 }
