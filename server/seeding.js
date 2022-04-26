@@ -1,5 +1,6 @@
 import { Accounts } from 'meteor/accounts-base';
 import { Leaderboard, Schema as LSchema } from '/imports/api/Leaderboard/Leaderboard.js';
+import { Roles } from 'meteor/alanning:roles';
 
 import { Generators } from '/imports/lib/Ten24/testing.js';
 import { Game_replay } from '/imports/lib/Ten24/Game_replay.js';
@@ -16,7 +17,9 @@ const DEFAULT_LEADERBOARD_LEADERS = ["Ash Ketchum", "Johnny Bravo", "SlayerS_`Bo
 export const Startup = function() {
   /* "admin" account */
   if (!Accounts.findUserByUsername(ADMIN_ACCOUNT.username))
-    Accounts.createUser(ADMIN_ACCOUNT);
+    Roles.addUsersToRoles(Accounts.createUser(ADMIN_ACCOUNT), "verified");
+  else
+    console.log("admin already exists")
 
   /* Taken from [https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/] */
   let getHash = (str) => {
