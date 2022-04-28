@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tracker } from 'meteor/tracker';
 
-import { Leaderboard, Subscribe as SubscribeToLeaderboard } from '/imports/api/Leaderboard/Leaderboard.js';
+import Leaderboard from '/imports/api/Leaderboard/Leaderboard.js';
 
 export class LeaderboardTable extends React.Component {
   constructor(props) {
@@ -9,12 +9,12 @@ export class LeaderboardTable extends React.Component {
     this.state = {
       scores: [],
     }
-    SubscribeToLeaderboard();
+    Leaderboard.Subscribe();
   }
 
   componentDidMount() {
     Tracker.autorun(() => {
-      let scores = Leaderboard.find({}, {
+      let scores = Leaderboard.Collection.find({}, {
         limit: 100,
         sort: { score: -1 }
       }).fetch();

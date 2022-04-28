@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { Random } from 'meteor/random';
 import { Accounts } from 'meteor/accounts-base';
 
-import { Leaderboard,
+import { Collection,
          Schema,
          ServerMethods,
        } from './Leaderboard.js';
@@ -35,11 +35,11 @@ export const ServerUnitTests = function() {
   describe("leaderboard tests (server only)", function() {
     describe("Methods", function() {
       it("Validates on insert", function() {
-        let insert = (o) => (_ => Leaderboard.insert(o))
+        let insert = (o) => (_ => Collection.insert(o))
         assert.throws(insert({}), undefined, undefined, "does not reject empty object");
         assert.doesNotThrow(insert(valid_leaderboard), undefined, undefined, "rejects valid object");
         assert.throws(insert(invalid_score), undefined, undefined, "does not reject invalid score");
-        Leaderboard.remove(valid_leaderboard);
+        Collection.remove(valid_leaderboard);
       });
       describe("submitScore", function() {
         let sampleAccount;
@@ -54,7 +54,7 @@ export const ServerUnitTests = function() {
         });
 
         afterEach(function() {
-          Leaderboard.remove({ record: valid_leaderboard.record });
+          Collection.remove({ record: valid_leaderboard.record });
         });
         it("rejects score if its not from an active user", function() {
           let submit = _ => ServerMethods.submitScore.call({ record: valid_leaderboard.record, score: valid_leaderboard.score });
@@ -66,7 +66,7 @@ export const ServerUnitTests = function() {
             { record: valid_leaderboard.record,
               score: valid_leaderboard.score });
           assert.doesNotThrow(submit);
-          assert.exists(Leaderboard.findOne({ username: sampleAccount.username }), "score not added to leaderboard");
+          assert.exists(Collection.findOne({ username: sampleAccount.username }), "score not added to leaderboard");
         });
       });
     });

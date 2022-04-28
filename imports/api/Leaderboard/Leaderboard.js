@@ -22,14 +22,19 @@ const Schema = new SimpleSchema({
   },
 });
 
-const Leaderboard = new Mongo.Collection("Leaderboard");
-Leaderboard.attachSchema(Schema);
+const Collection = new Mongo.Collection("Leaderboard");
+
+const Leaderboard = Collection;
+
+Collection.attachSchema(Schema);
 // Deny all client-side updates on the Leaderboard collection
-Leaderboard.deny({
+Collection.deny({
   insert() { return true; },
   update() { return true; },
   remove() { return true; },
 });
+
+
 
 const submitScore = new ValidatedMethod({
   name: "Leaderboard.submitScoreOG",
@@ -51,7 +56,7 @@ const submitScore = new ValidatedMethod({
         record,
         score,
       };
-      Leaderboard.insert(entry);
+      Collection.insert(entry);
     },
 });
 
@@ -76,7 +81,7 @@ function register_submitScore() {
         record,
         score,
       };
-      Leaderboard.insert(entry);
+      Collection.insert(entry);
     },
   })
 }
@@ -94,7 +99,7 @@ function registerServerMethods() {
 
 function Publish() {
   Meteor.publish('Leaderboard', function() {
-    return Leaderboard.find({});
+    return Collection.find({});
   });
 }
 
@@ -103,34 +108,10 @@ function Subscribe() {
 }
 
 export {
-  Leaderboard,
-//  submitScore,
   registerServerMethods,
   ServerMethods,
-//Collection
+  Collection,
   Schema,
   Publish,
   Subscribe,
 };
-
-/*
-{
-  Schema,
-  Leaderboard,
-  submitScore,
-  Publish,
-  Subscribe,
-}
-
-{
-  -x Leaderboard,
-  -x submitScore,
-  -> registerServerMethods,
-  -> ServerMethods,
-  -> Collection,
-  Schema,
-  Publish,
-  Subscribe,
-}
-
-*/

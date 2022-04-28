@@ -1,5 +1,5 @@
 import { Accounts } from 'meteor/accounts-base';
-import { Leaderboard, Schema as LSchema } from '/imports/api/Leaderboard/Leaderboard.js';
+import Leaderboard from '/imports/api/Leaderboard/Leaderboard.js';
 import { Roles } from 'meteor/alanning:roles';
 
 import { Generators } from '/imports/lib/Ten24/testing.js';
@@ -33,7 +33,7 @@ export const Startup = function() {
 
   /* Populate the leaderboard a bit*/
   for (username of DEFAULT_LEADERBOARD_LEADERS) {
-    if (Leaderboard.findOne({ username }) !== undefined)
+    if (Leaderboard.Collection.findOne({ username }) !== undefined)
       continue;
 
     let record = Generators.Record.generate(getHash(username));
@@ -48,7 +48,7 @@ export const Startup = function() {
       score,
     };
 
-    Leaderboard.insert(entry);
+    Leaderboard.Collection.insert(entry);
   }
 
 } 
