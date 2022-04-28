@@ -4,7 +4,8 @@ import { Accounts } from 'meteor/accounts-base';
 
 import { Leaderboard,
          Schema,
-         submitScore } from './Leaderboard.js';
+         ServerMethods,
+       } from './Leaderboard.js';
 
 import { Dummies as Ten24Dummies } from '/imports/lib/Ten24/testing.js';
 import { Dummies as LeaderboardDummies } from './testing.js';
@@ -56,11 +57,11 @@ export const ServerUnitTests = function() {
           Leaderboard.remove({ record: valid_leaderboard.record });
         });
         it("rejects score if its not from an active user", function() {
-          let submit = _ => submitScore.call({ record: valid_leaderboard.record, score: valid_leaderboard.score });
+          let submit = _ => ServerMethods.submitScore.call({ record: valid_leaderboard.record, score: valid_leaderboard.score });
           assert.throws(submit, "User must be logged in to submit a score", undefined);
         });
         it("accepts score if there is an active user", function() {
-          let submit = _ => submitScore._execute(
+          let submit = _ => ServerMethods.submitScore._execute(
             { userId: sampleAccount._id },
             { record: valid_leaderboard.record,
               score: valid_leaderboard.score });

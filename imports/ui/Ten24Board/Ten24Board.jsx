@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Ten24 from '/imports/lib/Ten24';
-import { submitScore } from '/imports/api/Leaderboard/Leaderboard.js';
+import Leaderboard from '/imports/api/Leaderboard/Leaderboard.js';
 
 /** Ten24Board
  *
@@ -221,7 +221,7 @@ class Ten24Board extends React.Component {
   }
 
   submitScore() {
-    submitScore.call({
+    Leaderboard.ServerMethods.submitScore.call({
       record: this.game.get_record(),
       score: this.game.get_score(),
     });

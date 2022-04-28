@@ -18,8 +18,6 @@ export const Startup = function() {
   /* "admin" account */
   if (!Accounts.findUserByUsername(ADMIN_ACCOUNT.username))
     Roles.addUsersToRoles(Accounts.createUser(ADMIN_ACCOUNT), "verified");
-  else
-    console.log("admin already exists")
 
   /* Taken from [https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/] */
   let getHash = (str) => {

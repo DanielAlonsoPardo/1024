@@ -8,6 +8,7 @@ import Leaderboard from '/imports/api/Leaderboard/Leaderboard.js';
 import Seeding from './seeding.js';
 import crypto from 'crypto';
 
+
 /* Startup */
 Meteor.startup(() => {
   if (!process.env.MAIL_URL) {
@@ -35,6 +36,8 @@ Roles.createRole("verified", { unlessExists: true });
 
 /* Server methods */
 Meteor.methods({
+  serverButton() {
+  },
   sendVerificationEmail() {
     let hash = getRandomVerificationHash();
     let email = {
@@ -50,13 +53,14 @@ Meteor.methods({
   },
 });
 
+Leaderboard.registerServerMethods();
+
 /* Accounts */
 Accounts.validateLoginAttempt((attempt) => {
   if (!attempt.allowed) {
     return false;
   }
 
-  console.log("success");
   return Roles.userIsInRole(attempt.user._id, "verified");
 })
 
