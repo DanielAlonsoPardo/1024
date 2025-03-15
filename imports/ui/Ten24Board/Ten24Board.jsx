@@ -139,7 +139,7 @@ class Ten24Board extends React.Component {
       combined: combined || 0,
       slide: null,
       value,
-      created: combined ? false : true,
+      created: !combined,
       id: this.ID
     };
 

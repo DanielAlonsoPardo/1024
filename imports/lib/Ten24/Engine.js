@@ -59,7 +59,7 @@ export class Engine {
    */
   constructor(boardsize, seed, callbacks) {
     if (boardsize < 1 || boardsize > 16)
-      throw "Boards of size " + boardsize + "are not permitted";
+      throw "Board size must be from 1 to 16. Current size (" + boardsize + ") is not permitted";
     //this.board[row][col]
     this.board = Array(boardsize);
     for (let i = 0; i < boardsize; i++)
@@ -167,34 +167,42 @@ export class Engine {
       let from = next_position(lower_side);
       let to = lower_side;
 
-      //slide them to one side
+      //slide or combine cells from the higher side to the lower side
       while(cell_within_bounds(from)) {
+        //if 'to' is empty...
         if (get_cell(row, to) == 0) {
-          //'to' cell is empty -> slide 'from' into it
-          //...if 'from' has something
+          //and 'from' has something...
           if (get_cell(row, from) != 0) {
+            //slide number
             this.slide_callback(row, from, to, slideAwayFromStart, slideVertically);
             set_cell(row, to, get_cell(row, from));
             set_cell(row, from, 0);
             a_number_moved = true;
+            //a number that just slid can combine with the next number, so we don't change the target cell ('to')
           }
-        } else {
+        } else {//'to' is not empty...
+          // ...and it has the same value as 'from'...
           if (get_cell(row, to) == get_cell(row, from)) {
-            //'to' can be combined with 'from'
+            //combine numbers
             this.slide_callback(row, from, to, slideAwayFromStart, slideVertically);
             this.combine_callback(row, from, to, slideAwayFromStart, slideVertically);
             set_cell(row, to, get_cell(row, from) + get_cell(row, to));
             this.update_max_number(get_cell(row, to));
             this.game_state.score += get_cell(row, to);
-            this.game_state.zero_count++;
             set_cell(row, from, 0);
+            this.game_state.zero_count++;
             a_number_moved = true;
+            //a number that just combined can't combine again this turn
             to = next_position(to);
           } else if (get_cell(row, from) != 0) {
-            //'to' can't be combined with 'from'
+            //'to' can't be combined with 'from' and can't slide into it either
             to = next_position(to);
             if (from != to) {
               //there's room to slide 'to' towards 'from'
+              //this situation happens when a number has slided the previous iteration of this loop
+              //  •24•
+              //  •2•4 <-- you are here
+              //  ••24 <-- do this
               this.slide_callback(row, from, to, slideAwayFromStart, slideVertically);
               set_cell(row, to, get_cell(row, from));
               set_cell(row, from, 0);

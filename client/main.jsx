@@ -6,17 +6,15 @@ import Leaderboard from '/imports/api/Leaderboard/Leaderboard.js';
 import { App } from '/imports/ui/App.jsx';
 
 Meteor.startup(() => {
-  if(process.env.NODE_ENV === "testing") {
+  if (process.env.NODE_ENV === "testing") {
     console.log("node env -> " + process.env.NODE_ENV);
-    render(<App/>, document.getElementById('react-target'));
-  }
-  if(process.env.NODE_ENV === "development") {
+  } else if (process.env.NODE_ENV === "development") {
     console.log("node env -> " + process.env.NODE_ENV);
-    render(<App/>, document.getElementById('react-target'));
+  } else if (process.env.NODE_ENV === "production") {
   }
-  if(process.env.NODE_ENV === "production") {
-    render(<App/>, document.getElementById('react-target'));
-  }
+
+
+  render(<App/>, document.getElementById('react-target'));
 });
 
 Leaderboard.registerServerMethods();
