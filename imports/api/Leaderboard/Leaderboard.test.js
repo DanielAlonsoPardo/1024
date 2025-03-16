@@ -37,7 +37,7 @@ export const ServerUnitTests = function() {
       it("Validates on insert", function() {
         let insert = (o) => (_ => Collection.insert(o))
         assert.throws(insert({}), undefined, undefined, "does not reject empty object");
-        assert.doesNotThrow(insert(valid_leaderboard), undefined, undefined, "rejects valid object");
+        assert.doesNotThrow(insert(valid_leaderboard), undefined, undefined, "does not accept valid object");
         assert.throws(insert(invalid_score), undefined, undefined, "does not reject invalid score");
         Collection.remove(valid_leaderboard);
       });
