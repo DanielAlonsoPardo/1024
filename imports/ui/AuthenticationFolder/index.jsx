@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 
+import './AuthenticationFolder.scss'
 import { LoginForm } from '/imports/ui/UserAccountBar/LoginForm'
 import { RegistrationForm } from '/imports/ui/UserAccountBar/RegistrationForm'
 
@@ -17,12 +18,19 @@ import { RegistrationForm } from '/imports/ui/UserAccountBar/RegistrationForm'
  */
 
 export const AuthenticationFolder = (props) => {
-  const [userState, setUserState] = useState('viewProfile'); //viewProfile, register, login
-  const user = props.user;
-
   return (
     <div className="authentication-folder">
-    
+      <Separator />
+    </div>
+  )
+}
+
+export const Separator = (props) => {
+  return (
+    <div className="folder-separator">
+      <div className="folder-body"></div>
+      <div class="folder-tab-name">anonymous</div>
+      <div className="folder-tab-detail"></div>
     </div>
   )
 }
