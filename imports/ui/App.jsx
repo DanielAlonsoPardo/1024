@@ -16,13 +16,16 @@ export const App = () => {
   const user = useTracker(() => Meteor.user());
   return (
     <>
-      <div className="authentication-folder-container"><AuthenticationFolder user={user}/> </div>
+      <div className="title">
+        <h1>COMBINATOR</h1>
+      </div>
       <div className="ten24-container"> <Ten24Board /*seed={10}*//> </div>
     </>
   )
 };
 
 //      <UserAccountBar user={user}/>
+//      <div className="authentication-folder-container"><AuthenticationFolder user={user}/> </div>
 //      <h1>Play 1024!</h1>
 //      <div className="ten24-container"> <Ten24Board /*seed={10}*//> </div>
 //      <LeaderboardTable/>

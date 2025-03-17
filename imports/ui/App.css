@@ -2,7 +2,16 @@
   width: 100%;
 }
 
-.ten24-container .ten24-board, .authentication-folder-container {
+.title {
+  width: fit-content;
+  margin-bottom: 80px;
+  padding-left: 1.4em;
+  font-family: Garamond;
+  font-size: 1.8em;
+  font-color: black;
+}
+
+.ten24-container .ten24-board, .title {
   position: relative;
   left: 50%;
   margin-left: -250px;
