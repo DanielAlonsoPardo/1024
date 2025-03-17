@@ -52,8 +52,10 @@ export const UserAccountBar = (props) => {
 
   const validStates = ["viewProfile", "register", "login", "verificationSent"];
 
-  return ( <div className="user-account-bar">
-             <CurrentInfo/>
-             <UserAccountButtons/>
-           </div> )
+  return (
+    <div className="user-account-bar">
+      <CurrentInfo/>
+      <UserAccountButtons/>
+    </div>
+  )
 }
