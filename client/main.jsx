@@ -1,3 +1,4 @@
+import { createRoot } from "react-dom/client";
 import React from 'react';
 import { Meteor } from 'meteor/meteor';
 import { render } from 'react-dom';
@@ -14,7 +15,8 @@ Meteor.startup(() => {
   }
 
 
-  render(<App/>, document.getElementById('react-target'));
+  const root = createRoot(document.getElementById('react-target'));
+  root.render(<App/>);
 });
 
 Leaderboard.registerServerMethods();
