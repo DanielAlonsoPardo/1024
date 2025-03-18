@@ -15,7 +15,9 @@
   position: relative;
   left: 50%;
   margin-left: -250px;
+  touch-action: none;
 }
+
 
 body {
   background-color: #579099;

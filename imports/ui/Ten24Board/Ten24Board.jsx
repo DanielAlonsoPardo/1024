@@ -241,6 +241,45 @@ class Ten24Board extends React.Component {
 
   }
 
+  touchStart = { x: 0, y: 0 };
+  touchEnd = { x: 0, y: 0 };
+
+  //swipe handling
+  onTouchStart(e) {
+    this.touchEnd = { x: 0, y: 0 };
+    this.touchStart.x = e.targetTouches[0].clientX;
+    this.touchStart.y = e.targetTouches[0].clientY;
+   };
+  onTouchMove(e) {
+    this.touchEnd.x = e.targetTouches[0].clientX;
+    this.touchEnd.y = e.targetTouches[0].clientY;
+  };
+
+  onTouchEnd(e) {
+    const min_move = 80;
+    console.log(`x = ${this.touchEnd.x - this.touchStart.x}, y = ${this.touchEnd.y - this.touchStart.y}`);
+    let x_move = this.touchEnd.x - this.touchStart.x;
+    let y_move = this.touchEnd.y - this.touchStart.y;
+
+    if (Math.abs(x_move) > Math.abs(y_move)) {
+      //left/right
+      if (Math.abs(x_move) < min_move) return;
+      if (x_move > 0) {
+        this.move(Ten24.Game.Move_code.Right);
+      } else {
+        this.move(Ten24.Game.Move_code.Left);
+      }
+    } else {
+      //up/down
+      if (Math.abs(y_move) < min_move) return;
+      if (y_move > 0) {
+        this.move(Ten24.Game.Move_code.Down);
+      } else {
+        this.move(Ten24.Game.Move_code.Up);
+      }
+    }
+  };
+
   resetBoard() {
     //clear board
     this.numbersInPlay = [];
@@ -279,6 +318,9 @@ class Ten24Board extends React.Component {
       <div className="ten24">
         <div className="ten24-board"
              onKeyDown={ this.inputHandling.bind(this) }
+             onTouchStart= { this.onTouchStart.bind(this) }
+             onTouchEnd= { this.onTouchEnd.bind(this) }
+             onTouchMove= { this.onTouchMove.bind(this) }
              onFocus={ this.togglePauseScreen.bind(this) }
              onBlur={ this.togglePauseScreen.bind(this) }
              tabIndex="0"
