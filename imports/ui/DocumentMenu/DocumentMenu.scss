@@ -1,0 +1,47 @@
+$separator-color: bisque;
+$page-color: white;
+
+.document-menu {
+  width: 500px;
+  background-color: red;
+}
+
+.page {
+  height: 200px;
+  background-color: $page-color
+}
+
+.separator {
+  font-size: 1em;
+}
+.separator-body {
+  background-color: $separator-color;
+  padding-bottom: 0.6em;
+  padding-left: 0.6em;
+  padding-right: 0.6em;
+}
+.separator-tab {
+  height: 1.5em;
+}
+.separator .separator-tab-name {
+  width: fit-content;
+  max-width: calc(100% - 1.5em);
+  float: left;
+  height: 1.5em;
+
+  background-color: $separator-color;
+  padding-left: 1em;
+  padding-right: 1em;
+  font-size: 1em;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.separator .separator-tab-detail {
+  height: 0px;
+  width: 0px;
+  float: left;
+
+  border-top: 1.5em solid $separator-color;
+  border-right: 1.5em solid transparent; 
+}

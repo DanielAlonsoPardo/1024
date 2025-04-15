@@ -2,7 +2,7 @@
   width: 100%;
 }
 
-.ten24-container .ten24-board, .authentication-folder-container {
+.ten24-container .ten24-board, .document-menu-container {
   position: relative;
   left: 50%;
   margin-left: -250px;
@@ -12,4 +12,6 @@
 
 body {
   background-color: #579099;
+  margin-top: 0px;
+  padding-top: 0px;
 }

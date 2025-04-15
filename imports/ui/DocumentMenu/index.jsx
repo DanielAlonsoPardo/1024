@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { useTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 
-import './AuthenticationFolder.scss'
+import './DocumentMenu.scss'
 import { LoginForm } from '/imports/ui/UserAccountBar/LoginForm'
 import { RegistrationForm } from '/imports/ui/UserAccountBar/RegistrationForm'
 
@@ -17,20 +17,38 @@ import { RegistrationForm } from '/imports/ui/UserAccountBar/RegistrationForm'
  *
  */
 
-export const AuthenticationFolder = (props) => {
+export const DocumentMenu = (props) => {
   return (
-    <div className="authentication-folder">
+    <div className="document-menu">
       <Separator />
+    </div>
+  )
+}
+
+export const Page = (props) => {
+  return (
+    <div className="page">
+      blabla
     </div>
   )
 }
 
 export const Separator = (props) => {
   return (
-    <div className="folder-separator">
-      <div className="folder-body"></div>
-      <div class="folder-tab-name">anonymous</div>
-      <div className="folder-tab-detail"></div>
+    <div className="separator">
+      <div className="separator-body">
+        <Page />
+      </div>
+      <SeparatorTab />
+    </div>
+  )
+}
+
+export const SeparatorTab = (props) => {
+  return (
+    <div className="separator-tab">
+      <div className="separator-tab-name">anonymous</div>
+      <div className="separator-tab-detail"></div>
     </div>
   )
 }

@@ -5,7 +5,7 @@ import { Meteor }          from 'meteor/meteor';
 import { UserAccountBar } from '/imports/ui/UserAccountBar';
 import { Ten24Board } from '/imports/ui/Ten24Board';
 import { LeaderboardTable } from '/imports/ui/LeaderboardTable/LeaderboardTable.jsx';
-import { AuthenticationFolder } from './AuthenticationFolder';
+import { DocumentMenu } from '/imports/ui/DocumentMenu';
 
 //Object.keys(foo).forEach(prop => console.log(prop));
 //console.log("_____________________________________")
@@ -16,7 +16,7 @@ export const App = () => {
   const user = useTracker(() => Meteor.user());
   return (
     <>
-      <div className="authentication-folder-container"><AuthenticationFolder user={user}/> </div>
+      <div className="document-menu-container"><DocumentMenu user={user}/> </div>
       <div className="ten24-container"> <Ten24Board /*seed={10}*//> </div>
     </>
   )
