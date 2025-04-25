@@ -1,8 +1,13 @@
 $separator-color: bisque;
 $page-color: white;
 
+$board-length: 500px; /*taken from Ten24Board.css*/
+
 .document-menu {
-  width: 500px;
+}
+
+.document-menu-inner {
+  width: $board-length;
   background-color: red;
 }
 

@@ -2,7 +2,7 @@
   width: 100%;
 }
 
-.ten24-container .ten24-board, .document-menu-container {
+.ten24-container .ten24-board, .document-menu-container .document-menu-inner {
   position: relative;
   left: 50%;
   margin-left: -250px;

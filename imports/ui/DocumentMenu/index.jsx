@@ -20,7 +20,9 @@ import { RegistrationForm } from '/imports/ui/UserAccountBar/RegistrationForm'
 export const DocumentMenu = (props) => {
   return (
     <div className="document-menu">
-      <Separator />
+      <div className="document-menu-inner">
+        <Separator />
+      </div>
     </div>
   )
 }
