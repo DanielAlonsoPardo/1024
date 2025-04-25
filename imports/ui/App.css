@@ -1,6 +1,12 @@
 .ten24-container {
-  width: 100%;
+  z-index: 0;
+  position: relative;
 }
+.document-menu-container {
+  z-index: 1;
+  position: relative;
+}
+
 
 .ten24-container .ten24-board, .document-menu-container .document-menu-inner {
   position: relative;

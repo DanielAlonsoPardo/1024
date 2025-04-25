@@ -40,6 +40,8 @@ export const Separator = (props) => {
     <div className="separator">
       <div className="separator-body">
         <Page />
+        <PageMarker />
+        <PageMarker />
       </div>
       <SeparatorTab />
     </div>
@@ -51,6 +53,18 @@ export const SeparatorTab = (props) => {
     <div className="separator-tab">
       <div className="separator-tab-name">anonymous</div>
       <div className="separator-tab-detail"></div>
+    </div>
+  )
+}
+
+export const PageMarker = (props) => {
+  return (
+    <div className="page-marker">
+      <div className="page-marker-transparent">
+      </div>
+      <div className="page-marker-name">
+      blabli
+      </div>
     </div>
   )
 }
