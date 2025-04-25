@@ -1,7 +1,7 @@
 $separator-color: bisque;
 $page-color: white;
 
-$board-length: 500px; /*taken from Ten24Board.css*/
+$board-length: 500px; /*[!] taken from Ten24Board.css*/
 
 .document-menu {
 }
@@ -15,6 +15,8 @@ $board-length: 500px; /*taken from Ten24Board.css*/
   background-color: $page-color
 }
 
+
+$separator-tab-height: 1.5em;
 .separator {
   font-size: 1em;
 }
@@ -25,7 +27,7 @@ $board-length: 500px; /*taken from Ten24Board.css*/
   padding-right: 0.6em;
 }
 .separator-tab {
-  height: 1.5em;
+  height: $separator-tab-height;
 }
 .separator .separator-tab-name {
   float: left;
@@ -61,7 +63,7 @@ $page-marker-height: 100px;
   float: right;
   margin: 0.5em;
 
-  margin-top: calc(0.2em - #{$page-marker-height}/2);
+  margin-top: calc((0.2em - #{$separator-tab-height}) - #{$page-marker-height}/2);
 }
 
 .page-marker-transparent {

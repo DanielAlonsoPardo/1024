@@ -5,6 +5,7 @@ import { Meteor } from 'meteor/meteor';
 import './DocumentMenu.scss'
 import { LoginForm } from '/imports/ui/UserAccountBar/LoginForm'
 import { RegistrationForm } from '/imports/ui/UserAccountBar/RegistrationForm'
+import { Page, Marker, Separator } from './Elements'
 
 /** UserAccountBar
  *    Shows user account related info. That can be one of:
@@ -17,54 +18,30 @@ import { RegistrationForm } from '/imports/ui/UserAccountBar/RegistrationForm'
  *
  */
 
+const DocumentMenuStates = [
+  "anonymous",
+  "authenticated",
+  "login",
+  "register",
+  "settings",
+]
+
 export const DocumentMenu = (props) => {
   return (
     <div className="document-menu">
       <div className="document-menu-inner">
-        <Separator />
+        <Separator>
+          <Page>Page</Page>
+        </Separator>
+        <Marker>Marker 1</Marker>
+        <Marker>Marker 2</Marker>
+        <Marker>Marker 3</Marker>
       </div>
     </div>
   )
 }
 
-export const Page = (props) => {
-  return (
-    <div className="page">
-      blabla
-    </div>
-  )
-}
 
-export const Separator = (props) => {
-  return (
-    <div className="separator">
-      <div className="separator-body">
-        <Page />
-        <PageMarker />
-        <PageMarker />
-      </div>
-      <SeparatorTab />
-    </div>
-  )
-}
 
-export const SeparatorTab = (props) => {
-  return (
-    <div className="separator-tab">
-      <div className="separator-tab-name">anonymous</div>
-      <div className="separator-tab-detail"></div>
-    </div>
-  )
-}
 
-export const PageMarker = (props) => {
-  return (
-    <div className="page-marker">
-      <div className="page-marker-transparent">
-      </div>
-      <div className="page-marker-name">
-      blabli
-      </div>
-    </div>
-  )
-}
+
