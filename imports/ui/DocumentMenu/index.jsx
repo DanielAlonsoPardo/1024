@@ -18,24 +18,92 @@ import { Page, Marker, Separator } from './Elements'
  *
  */
 
-const DocumentMenuStates = [
-  "anonymous",
-  "authenticated",
-  "login",
-  "register",
-  "settings",
-]
+const DocumentMenuStates = {
+  anonymous: {
+    page: "",
+    markers: {
+      login: { invis: false },
+      register: { invis: false },
+    }
+  },
+  authenticated: {
+    page: "",
+    markers: {
+      logout: { invis: false },
+      settings: { invis: false },
+    }
+  },
+  login: {
+    page: "login",
+    markers: {
+      login: { invis: false },
+      register: { invis: true }
+    },
+  },
+  register: {
+    page: "register",
+    markers: {
+      login: { invis: true },
+      register: { invis: false }
+    }
+  },
+  settings: {
+    page: "settings",
+    markers: {
+      logout: { invis: true },
+      settings: { invis: false },
+    },
+  },
+}
 
-export const DocumentMenu = (props) => {
+export const DocumentMenu = ({ user }) => {
+  let initState = (user?.username) ? DocumentMenuStates.anonymous : DocumentMenuStates.authenticated
+  let [menuState, setMenuState] = useState(initState)
+
+  function changeMenu(menuState) {
+    return (e) => {
+      e.preventDefault()
+      setMenuState(DocumentMenuStates[menuState] ?? DocumentMenuStates.anonymous)
+    }
+  }
+
   return (
     <div className="document-menu">
       <div className="document-menu-inner">
-        <Separator>
-          <Page>Page</Page>
+        <Separator tabName={ user?.username ?? "anonymous" }>
+          <Page hidden={ menuState.page != "login" }>Login</Page>
+          <Page hidden={ menuState.page != "register" }>Register</Page>
+          <Page hidden={ menuState.page != "settings" }>Settings</Page>
         </Separator>
-        <Marker>Marker 1</Marker>
-        <Marker>Marker 2</Marker>
-        <Marker>Marker 3</Marker>
+
+        <Marker
+          onClick={changeMenu("login")}
+          hidden={ !menuState.markers.login }
+          invis={ menuState.markers.login?.invis }
+        >
+          Login
+        </Marker>
+        <Marker
+          onClick={changeMenu("register")}
+          hidden={ !menuState.markers.register }
+          invis={ menuState.markers.register?.invis }
+        >
+          Register
+        </Marker>
+        <Marker
+          onClick={changeMenu("logout")}
+          hidden={ !menuState.markers.logout }
+          invis={ menuState.markers.logout?.invis }
+        >
+          Logout
+        </Marker>
+        <Marker
+          onClick={changeMenu("settings")}
+          hidden={ !menuState.markers.settings }
+          invis={ menuState.markers.settings?.invis }
+        >
+          Settings
+        </Marker>
       </div>
     </div>
   )

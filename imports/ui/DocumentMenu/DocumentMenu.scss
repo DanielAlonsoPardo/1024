@@ -57,6 +57,10 @@ $separator-tab-height: 1.5em;
 
 $page-marker-height: 100px;
 
+.invis {
+  visibility: hidden;
+}
+
 .page-marker {
   width: $page-marker-height;
   height: $page-marker-height;
