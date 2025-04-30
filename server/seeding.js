@@ -32,8 +32,8 @@ export const Startup = function() {
   }
 
   /* Populate the leaderboard a bit*/
-  for (username of DEFAULT_LEADERBOARD_LEADERS) {
-    if (Leaderboard.Collection.findOne({ username }) !== undefined)
+  for (let username of DEFAULT_LEADERBOARD_LEADERS) {
+    if (Leaderboard.Collection.findOneAsync({ username }) !== undefined)
       continue;
 
     let record = Generators.Record.generate(getHash(username));

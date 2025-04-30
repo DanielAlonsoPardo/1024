@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { Email } from 'meteor/email';
 import { Roles } from 'meteor/alanning:roles';
-import { Restivus } from 'meteor/nimble:restivus';
+import 'meteor/aldeed:collection2/static';
 
 import Leaderboard from '/imports/api/Leaderboard/Leaderboard.js';
 import Seeding from './seeding.js';
@@ -32,7 +32,7 @@ Meteor.startup(() => {
 });
 
 /* Roles */
-Roles.createRole("verified", { unlessExists: true });
+Roles.createRoleAsync("verified", { unlessExists: true });
 
 /* Server methods */
 Meteor.methods({
@@ -61,7 +61,7 @@ Accounts.validateLoginAttempt((attempt) => {
     return false;
   }
 
-  return Roles.userIsInRole(attempt.user._id, "verified");
+  return Roles.userIsInRoleAsync(attempt.user._id, "verified");
 })
 
 function getRandomVerificationHash() {
@@ -100,7 +100,7 @@ Accounts.onCreateUser((options, user) => {
 //       };
 //     else {
 //       Accounts.users.update({ _id: user._id }, { $unset: { verification: 1 }});
-//       Roles.addUsersToRoles(user._id, 'verified');
+//       Roles.addUsersToRolesAsync(user._id, 'verified'); // Roles.addUsersToRoles(user._id, 'verified');
 //       return {
 //         statusCode: 200,
 //         headers: {

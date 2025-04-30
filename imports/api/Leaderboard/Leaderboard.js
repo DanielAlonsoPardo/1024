@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import 'meteor/aldeed:collection2/static';
 import SimpleSchema from 'simpl-schema';
 
 import { Record } from '/imports/lib/Ten24/Game.js';
