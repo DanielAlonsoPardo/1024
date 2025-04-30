@@ -75,39 +75,39 @@ Accounts.onCreateUser((options, user) => {
 });
 
 /* API Routes */
-var Api = new Restivus({
-  useDefaultAuth: true,
-  prettyJson: true
-});
-Api.addRoute("verification", {
-  get() {
-    if (!this.queryParams.hash)
-      return { statusCode: 400,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        body: `Malformed verification link.`,
-      };
+// var Api = new Restivus({
+//   useDefaultAuth: true,
+//   prettyJson: true
+// });
+// Api.addRoute("verification", {
+//   get() {
+//     if (!this.queryParams.hash)
+//       return { statusCode: 400,
+//         headers: {
+//           'Content-Type': 'text/plain',
+//         },
+//         body: `Malformed verification link.`,
+//       };
 
-    let user = Accounts.users.findOne({ verification: this.queryParams.hash.toString() });
-    if (!user)
-      return {
-        statusCode: 404,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        body: `Invalid or expired verification link.`,
-      };
-    else {
-      Accounts.users.update({ _id: user._id }, { $unset: { verification: 1 }});
-      Roles.addUsersToRoles(user._id, 'verified');
-      return {
-        statusCode: 200,
-        headers: {
-          'Content-Type': 'text/plain',
-        },
-        body: `${ user.username }'s account has been validated! You may now log in.`,
-      };
-    }
-  }
-});
+//     let user = Accounts.users.findOne({ verification: this.queryParams.hash.toString() });
+//     if (!user)
+//       return {
+//         statusCode: 404,
+//         headers: {
+//           'Content-Type': 'text/plain',
+//         },
+//         body: `Invalid or expired verification link.`,
+//       };
+//     else {
+//       Accounts.users.update({ _id: user._id }, { $unset: { verification: 1 }});
+//       Roles.addUsersToRoles(user._id, 'verified');
+//       return {
+//         statusCode: 200,
+//         headers: {
+//           'Content-Type': 'text/plain',
+//         },
+//         body: `${ user.username }'s account has been validated! You may now log in.`,
+//       };
+//     }
+//   }
+// });
