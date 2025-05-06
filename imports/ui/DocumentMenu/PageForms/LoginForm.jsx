@@ -12,6 +12,11 @@ export const LoginForm = ({ returnToMainMenu }) => {
   const submit = e => {
     e.preventDefault();
 
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    setUsername(data.username)
+    setPassword(data.password)
+
     Meteor.loginWithPassword(username, password,
       (err) => {
         if (err) {
@@ -23,7 +28,6 @@ export const LoginForm = ({ returnToMainMenu }) => {
         }
       });
   };
-
   return (
     <div>
       <form onSubmit={submit} className="login-form">
