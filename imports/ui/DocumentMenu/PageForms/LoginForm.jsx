@@ -1,5 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import React, { useState } from 'react';
+import Login from '@react-login-page/base';
+
+import "./PageForms.scss"
 
 export const LoginForm = ({ returnToMainMenu }) => {
   const [username, setUsername] = useState('');
@@ -24,7 +27,12 @@ export const LoginForm = ({ returnToMainMenu }) => {
   return (
     <div>
       <form onSubmit={submit} className="login-form">
-        <label htmlFor="username">Username</label>
+        <Login style={{ height: 380 }}>
+          <Login.Logo>
+            <img src="/favicon.ico" alt="1024" width="18" height="18" />
+          </Login.Logo>
+        </Login>
+{/*        <label htmlFor="username">Username</label>
         <input type="text" placeholder="Username" name="username" required
           onChange={e => setUsername(e.target.value)}/>
 
@@ -32,7 +40,7 @@ export const LoginForm = ({ returnToMainMenu }) => {
         <input type="password" placeholder="Password" name="password" required
           onChange={e => setPassword(e.target.value)}/>
 
-        <button type="submit">Log In</button>
+        <button type="submit">Log In</button>*/}
       </form>
       <div className="login-form-error-message">{errmsg}</div>
     </div>
