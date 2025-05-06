@@ -83,7 +83,7 @@ export const DocumentMenu = ({ user }) => {
             <button onClick={ returnToMain }>return</button>
           </Page>
           <Page hidden={ menuState.page != "register" }>
-            <RegistrationForm changeMenu={ changeMenu } />
+            <RegistrationForm returnToMainMenu={ returnToMain } />
             <button onClick={ returnToMain }>return</button>
           </Page>
           <Page hidden={ menuState.page != "settings" }>
