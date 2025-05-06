@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import React, { useState } from 'react';
 
-export const LoginForm = () => {
+export const LoginForm = ({ returnToMainMenu }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errmsg, setErrmsg] = useState('');
@@ -16,6 +16,7 @@ export const LoginForm = () => {
         } else {
           console.log("logged in");
           setErrmsg("");
+          returnToMainMenu(e)
         }
       });
   };

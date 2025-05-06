@@ -1,7 +1,7 @@
 import { Game } from './Game.js';
 
 let generateRandomGameRecord = (seed) => {
-    let game = new Game(seed|Math.random());
+    let game = new Game(seed ?? Math.random());
     game.start();
     while(!game.ended()) {
       game.move_up();

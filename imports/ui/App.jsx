@@ -13,10 +13,10 @@ import { DocumentMenu } from '/imports/ui/DocumentMenu';
 import '/imports/ui/App.css';
 
 export const App = () => {
-  const user = useTracker(() => Meteor.user());
+  const user = useTracker(() => Meteor.user(), []);
   return (
     <>
-      <div className="document-menu-container"><DocumentMenu userName={ user }/> </div>
+      <div className="document-menu-container"><DocumentMenu user={ user }/> </div>
       <div className="ten24-container"> <Ten24Board /*seed={10}*//> </div>
     </>
   )

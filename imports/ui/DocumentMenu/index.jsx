@@ -3,8 +3,8 @@ import { useTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 
 import './DocumentMenu.scss'
-import { LoginForm } from '/imports/ui/UserAccountBar/LoginForm'
-import { RegistrationForm } from '/imports/ui/UserAccountBar/RegistrationForm'
+import { LoginForm } from './PageForms/LoginForm'
+import { RegistrationForm } from './PageForms/RegistrationForm'
 import { Page, Marker, Separator } from './Elements'
 
 /** UserAccountBar
@@ -20,14 +20,14 @@ import { Page, Marker, Separator } from './Elements'
 
 const DocumentMenuStates = {
   anonymous: {
-    page: "",
+    page: "anonymous",
     markers: {
       login: { invis: false },
       register: { invis: false },
     }
   },
   authenticated: {
-    page: "",
+    page: "authenticated",
     markers: {
       logout: { invis: false },
       settings: { invis: false },
@@ -57,13 +57,20 @@ const DocumentMenuStates = {
 }
 
 export const DocumentMenu = ({ user }) => {
-  let initState = (user?.username) ? DocumentMenuStates.anonymous : DocumentMenuStates.authenticated
-  let [menuState, setMenuState] = useState(initState)
 
+  let mainMenu = useTracker(() => ((user?.username) ? DocumentMenuStates.authenticated : DocumentMenuStates.anonymous), [user])
+  let [menuState, setMenuState] = useState(mainMenu)
+  useTracker(() => (setMenuState(mainMenu)), [mainMenu])
+
+  function returnToMain(e) {
+    e.preventDefault()
+    setMenuState(mainMenu)
+  }
   function changeMenu(menuState) {
     return (e) => {
       e.preventDefault()
-      setMenuState(DocumentMenuStates[menuState] ?? DocumentMenuStates.anonymous)
+      if (!menuState) window.alert("no menu state selected, contact developer")
+      setMenuState(DocumentMenuStates[menuState])
     }
   }
 
@@ -71,9 +78,18 @@ export const DocumentMenu = ({ user }) => {
     <div className="document-menu">
       <div className="document-menu-inner">
         <Separator tabName={ user?.username ?? "anonymous" }>
-          <Page hidden={ menuState.page != "login" }>Login</Page>
-          <Page hidden={ menuState.page != "register" }>Register</Page>
-          <Page hidden={ menuState.page != "settings" }>Settings</Page>
+          <Page hidden={ menuState.page != "login" }>
+            <LoginForm returnToMainMenu={ returnToMain }/>
+            <button onClick={ returnToMain }>return</button>
+          </Page>
+          <Page hidden={ menuState.page != "register" }>
+            <RegistrationForm changeMenu={ changeMenu } />
+            <button onClick={ returnToMain }>return</button>
+          </Page>
+          <Page hidden={ menuState.page != "settings" }>
+            Settings
+            <button onClick={ returnToMain }>return</button>
+          </Page>
         </Separator>
 
         <Marker
@@ -91,7 +107,7 @@ export const DocumentMenu = ({ user }) => {
           Register
         </Marker>
         <Marker
-          onClick={changeMenu("logout")}
+          onClick={ (e) => {e.preventDefault(); Meteor.logout()} }
           hidden={ !menuState.markers.logout }
           invis={ menuState.markers.logout?.invis }
         >

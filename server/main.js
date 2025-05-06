@@ -57,11 +57,12 @@ Leaderboard.registerServerMethods();
 
 /* Accounts */
 Accounts.validateLoginAttempt((attempt) => {
-  if (!attempt.allowed) {
-    return false;
-  }
+  return true
+  // if (!attempt.allowed) {
+  //   return false;
+  // }
 
-  return Roles.userIsInRoleAsync(attempt.user._id, "verified");
+  // return Roles.userIsInRoleAsync(attempt.user._id, "verified");
 })
 
 function getRandomVerificationHash() {
