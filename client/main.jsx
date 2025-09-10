@@ -20,3 +20,4 @@ Meteor.startup(() => {
 });
 
 Leaderboard.registerServerMethods();
+Leaderboard.Subscribe();

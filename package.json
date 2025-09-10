@@ -4,13 +4,14 @@
   "scripts": {
     "start": "export $(cat .env | xargs) && meteor run --settings settings-production.json",
     "test": "meteor test --once --driver-package meteortesting:mocha --port 3004",
-    "test-app": "TEST_WATCH=1 NODE_ENV=testing meteor test --full-app --driver-package meteortesting:mocha --port 3002 --raw-logs",
+    "test-app": "TEST_WATCH=1 NODE_ENV=development meteor test --full-app --driver-package meteortesting:mocha --port 3002 --raw-logs",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",
     "@react-login-page/base": "^1.0.5",
     "bcrypt": "^5.0.1",
+    "chai-as-promised": "^8.0.2",
     "mersenne-twister": "^1.1.0",
     "meteor-node-stubs": "^1.2.17",
     "react": "^19.0.0",

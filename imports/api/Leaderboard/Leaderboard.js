@@ -25,40 +25,12 @@ const Schema = new SimpleSchema({
 
 const Collection = new Mongo.Collection("Leaderboard");
 
-const Leaderboard = Collection;
-
 Collection.attachSchema(Schema);
 // Deny all client-side updates on the Leaderboard collection
 Collection.deny({
   insert() { return true; },
   update() { return true; },
   remove() { return true; },
-});
-
-
-
-const submitScore = new ValidatedMethod({
-  name: "Leaderboard.submitScoreOG",
-  validate: new SimpleSchema({
-                  record: Record.Schema,
-                  score: SimpleSchema.Integer
-                }).validator(),
-  run({ record, score }) {
-      if (!this.userId)
-        throw new Meteor.Error("user-not-logged", "User must be logged in to submit a score");
-      let user = Meteor.users.findOne({ _id: this.userId });
-      if (!user) {
-        throw new Meteor.Error("user-does-not-exist", "User must exist");
-      }
-
-      let entry = {
-        username: user.username,
-        date: new Date(),
-        record,
-        score,
-      };
-      Collection.insert(entry);
-    },
 });
 
 function register_submitScore() {
@@ -71,18 +43,19 @@ function register_submitScore() {
     run({ record, score }) {
       if (!this.userId)
         throw new Meteor.Error("user-not-logged", "User must be logged in to submit a score");
-      let user = Meteor.users.findOne({ _id: this.userId });
-      if (!user) {
-        throw new Meteor.Error("user-does-not-exist", "User must exist");
-      }
-
-      let entry = {
-        username: user.username,
-        date: new Date(),
-        record,
-        score,
-      };
-      Collection.insert(entry);
+      return Meteor.users.findOneAsync({ _id: this.userId })
+        .then(user => {
+          if (!user) {
+            throw new Meteor.Error("user-does-not-exist", "User must exist");
+          }
+          let entry = {
+            username: user.username,
+            date: new Date(),
+            record,
+            score,
+          };
+          return Collection.insertAsync(entry)
+        })
     },
   })
 }

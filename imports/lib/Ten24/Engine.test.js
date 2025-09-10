@@ -357,8 +357,8 @@ export const UnitTests = function() {
         assert.isTrue(executed, "did not execute callback 1");
 
         executed = false;
-        paramsExist = false;
-        paramsOK = false;
+        let paramsExist = false;
+        let paramsOK = false;
         f = params => {
           executed = true;
           if (params)

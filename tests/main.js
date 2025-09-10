@@ -2,7 +2,9 @@ import assert from 'assert';
 
 import { UnitTests as Ten24_test } from '/imports/lib/Ten24/Ten24.test.js';
 import { UnitTests as Ten24Board_test } from '/imports/ui/Ten24Board/Ten24Board.test.jsx';
-import { UnitTests as leaderboard_test, ServerUnitTests as leaderboard_server_test } from '/imports/api/Leaderboard/Leaderboard.test.js';
+import { UnitTests as leaderboard_test,
+         ServerUnitTests as leaderboard_server_test,
+         ClientUnitTests as leaderboard_client_test } from '/imports/api/Leaderboard/Leaderboard.test.js';
 
 let UnitTests = {
   Ten24_test,
@@ -13,6 +15,10 @@ let UnitTests = {
 let ServerUnitTests = {
   leaderboard_server_test,
 };
+
+let ClientUnitTests = {
+  leaderboard_client_test
+}
 
 describe("Sanity check", function() {
   this.timeout(1000);
@@ -36,6 +42,12 @@ for (const property in UnitTests) {
 if (Meteor.isServer) {
   for (const property in ServerUnitTests) {
     ServerUnitTests[property]();
+  }
+}
+
+if (Meteor.isClient) {
+  for (const property in ClientUnitTests) {
+    ClientUnitTests[property]();
   }
 }
 
