@@ -81,12 +81,12 @@ export const ClientUnitTests = function() {
           it("accepts score if there is an active user", async function() {})
         })
         describe("logged out", function() {
-          it("rejects score if its not from an active user", function() {
-            let submit = _ => Leaderboard.ServerMethods.submitScore._execute(
-              { userId: "null" },
+          it("rejects score if its not from an active user", async function() {
+            let submit = Meteor.callAsync(
+              "Leaderboard.submitScore",
               { record: valid_leaderboard.record,
-                score: valid_leaderboard.score });
-            assert.throws(submit, "User must be logged in to submit a score", undefined);
+                score: valid_leaderboard.score })
+            await assert.isRejected(submit, "User must be logged in to submit a score")
           });
         })
       });
