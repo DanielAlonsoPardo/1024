@@ -18,6 +18,7 @@ export const App = () => {
     <>
       <div className="document-menu-container"><DocumentMenu user={ user }/> </div>
       <div className="ten24-container"> <Ten24Board /*seed={10}*//> </div>
+      <div className="leaderboard-container"> <LeaderboardTable/> </div>
     </>
   )
 };

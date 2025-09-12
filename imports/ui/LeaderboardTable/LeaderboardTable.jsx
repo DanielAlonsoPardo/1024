@@ -17,6 +17,10 @@ export class LeaderboardTable extends React.Component {
       let scores = Leaderboard.Collection.find({}, {
         limit: 100,
         sort: { score: -1 }
+      }, {
+        username: 1,
+        date: 1,
+        score: 1,
       }).fetch();
       this.setState({ scores });
     });
