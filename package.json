@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.17.9",
+    "@emotion/react": "^11.14.0",
     "@react-login-page/base": "^1.0.5",
+    "@table-library/react-table-library": "^4.1.15",
     "bcrypt": "^5.0.1",
     "chai-as-promised": "^8.0.2",
     "mersenne-twister": "^1.1.0",
