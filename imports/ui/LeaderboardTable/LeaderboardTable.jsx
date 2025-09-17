@@ -2,6 +2,7 @@ import React from 'react';
 import { Tracker } from 'meteor/tracker';
 
 import Leaderboard from '/imports/api/Leaderboard/Leaderboard.js';
+import { CompactTable } from '@table-library/react-table-library/compact';
 
 export class LeaderboardTable extends React.Component {
   constructor(props) {
@@ -16,43 +17,31 @@ export class LeaderboardTable extends React.Component {
     Tracker.autorun(() => {
       let scores = Leaderboard.Collection.find({}, {
         limit: 100,
-        sort: { score: -1 }
-      }, {
-        username: 1,
-        date: 1,
-        score: 1,
+        sort: { score: -1 },
+        fields: {
+          username: 1,
+          date: 1,
+          score: 1,
+        }
       }).fetch();
+      scores.forEach(x => { x.id = x._id })
       this.setState({ scores });
     });
   }
 
-  static renderEntry = (e, key) => {
-    return (
-      <tr key={ key }>
-        <td>{ e.username }</td>
-        <td>{ e.score }</td>
-        <td>{ e.date.toDateString() }</td>
-      </tr>
-    );
-  }
-
   render() {
-    let i = 0;
-    let renderAllEntries = _ => this.state.scores.map(LeaderboardTable.renderEntry, i++);
-    return (
-      <div style={{ background: "white", height: "300px" }}>
-        <table>
-          <thead>
-            <tr>
-              <th>Username</th><th>Score</th><th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            { renderAllEntries() }
-          </tbody>
-        </table>
+    const columns = [
+      { label: 'User', renderCell: (item) => item.username },
+      { label: 'Date',
+        renderCell: (item) =>
+          item.date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit' })},
+      { label: 'Score', renderCell: (item) => item.score },
+    ];
 
-      </div>
-    );
+    const data = { nodes: this.state.scores };
+    return <CompactTable columns={columns} data={data} />;
   }
 }
